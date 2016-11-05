@@ -1,6 +1,8 @@
 package fms_system;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,7 +20,7 @@ public class FMS_System extends JFrame{
      */
     int width=800;
     int height=500;
-    
+    Registeration register_obj=new Registeration();
     public FMS_System(){
         super("FMS_System");
         setSize(width,height);
@@ -44,6 +46,15 @@ public class FMS_System extends JFrame{
         register.setBackground(Color.red);
         register.setForeground(Color.white);
         
+        
+        register.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                register_obj.setVisible(true);
+            }
+            
+        });
         add(title);
         add(login);
         add(register);
