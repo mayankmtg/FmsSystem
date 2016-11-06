@@ -21,6 +21,7 @@ public class FMS_System extends JFrame{
     int width=800;
     int height=500;
     Registeration register_obj=new Registeration();
+    Login login_obj=new Login();
     public FMS_System(){
         super("FMS_System");
         setSize(width,height);
@@ -40,6 +41,16 @@ public class FMS_System extends JFrame{
         login.setSize(200,40);
         login.setBackground(Color.orange);
         
+        
+        
+        login.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                login_obj.setVisible(true);
+            }
+            
+        });
         JButton register=new JButton("Register");
         register.setLocation(300, 300);
         register.setSize(200,40);
