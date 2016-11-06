@@ -5,29 +5,24 @@
  */
 package fms_system;
 
-import java.awt.Color;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
  *
  * @author mayank
  * @author amit
  */
-public class Login extends JFrame{
+public class Admin extends JFrame{
     int width=800;
     int height=500;
-    public Login(){
+    public Admin(){
+        
         super("Login Form");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         
-        JLabel title=new JLabel("Login Form",SwingConstants.CENTER);
-        title.setLocation(300, 100);
-        title.setSize(200, 40);
-        title.setForeground(Color.red);
     }
 }
