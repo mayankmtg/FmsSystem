@@ -13,12 +13,12 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  * @author mayank
  * @author amit
  */
-public class Supervisor extends JFrame{
+public class Staff extends JFrame{
     int width=800;
     int height=500;
-    public Supervisor(){
+    public Staff(){
         
-        super("Supervisor Interface");
+        super("Staff Interface");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
