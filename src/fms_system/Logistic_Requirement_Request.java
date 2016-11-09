@@ -13,12 +13,13 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  * @author mayank
  * @author amit
  */
-public class Task extends JFrame{
+public class Logistic_Requirement_Request extends JFrame {
+    
     int width=800;
     int height=500;
-    public Task(){
+    public Logistic_Requirement_Request(){
         
-        super("Task Assigner");
+        super("Logistic Requirement");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

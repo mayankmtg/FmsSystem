@@ -11,13 +11,14 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 /**
  *
  * @author mayank
+ * @author amit
  */
 public class Logistic_Approval_Request extends JFrame{
     int width=800;
     int height=500;
     public Logistic_Approval_Request(){
         
-        super("Task Assigner");
+        super("Logistic Approval");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
