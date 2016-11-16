@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -115,62 +116,53 @@ public class Register extends JFrame{
         
         ///////////////////////////////////////
         JTextField [] Fields=new JTextField[8];
-        
         Fields[0]=new JTextField();
         Fields[0].setLocation(400, 90);
         Fields[0].setSize(200,20);
         Fields[0].setEnabled(false);
         Fields[0].setText(""+this.setID());
-        add(Fields[0]);
-        
         
         Fields[1]=new JTextField();
         Fields[1].setLocation(400, 140);
         Fields[1].setSize(200,20);
-        Type.requestFocus();
-        add(Fields[1]);
+        Fields[1].requestFocus();
         
         Fields[2]=new JTextField();
         Fields[2].setLocation(400, 190);
         Fields[2].setSize(200,20);
-        add(Fields[2]);
         
         Fields[3]=new JTextField();
         Fields[3].setLocation(400, 240);
         Fields[3].setSize(200,20);
-        add(Fields[3]);
         
         Fields[4]=new JPasswordField();
         Fields[4].setLocation(400, 290);
         Fields[4].setSize(200,20);
-        add(Fields[4]);
         
         Fields[5]=new JTextField();
         Fields[5].setLocation(400, 340);
         Fields[5].setSize(200,20);
-        add(Fields[5]);
         
         Fields[6]=new JTextField();
         Fields[6].setLocation(400, 390);
         Fields[6].setSize(200,20);
-        add(Fields[6]);
         
         Fields[7]=new JTextField();
         Fields[7].setLocation(400, 440);
         Fields[7].setSize(200,20);
-        add(Fields[7]);
         
+        for(int i=0;i<8;i++){
+            add(Fields[i]);
+        }
         JButton sub=new JButton("Submit");
         sub.setLocation(200, 470);
         sub.setSize(200,20);
         sub.setBackground(Color.green);
-        
         sub.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
                 try{
-                    PrintWriter writer = new PrintWriter("database/userinfo.csv", "UTF-8");
+                    PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
                     String userData="";
                     for(int i=0;i<7;i++){
                         userData+=Fields[i].getText() +",";
@@ -179,14 +171,11 @@ public class Register extends JFrame{
                     writer.println(userData);
                     writer.close();
                 } catch (Exception e) {
-                    
                 }
                 JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! You have been succssfully registered. Please Login Now!", "Thank You", JOptionPane.INFORMATION_MESSAGE);
                 setVisible(false);
                 login_obj.setVisible(true);
-                
             }
-            
         });
         add(sub);
         
@@ -194,17 +183,14 @@ public class Register extends JFrame{
         cancel.setLocation(400, 470);
         cancel.setSize(200,20);
         cancel.setBackground(Color.red);
-        
         cancel.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
                 setVisible(false);
-                login_obj.setVisible(true);
+                //login_obj.setVisible(true);
+                new FMS_System().setVisible(true);
             }
-            
         });
         add(cancel);
-        
-        
     }
 }

@@ -65,16 +65,6 @@ public class Admin extends JFrame{
         Approve_requests.setLocation(50,230);
         Approve_requests.setSize(250,50);
         add(Approve_requests);
-        
-        //Set the functions of all supervisors and staffers that are visible to gm.
-        
-        
-        
-        this.setVisible(true);
-        
+
     }
-    //public static void main(String[] args)
-    //{
-      //  Admin a =new Admin();
-    //}
 }

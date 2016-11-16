@@ -13,6 +13,7 @@ import java.io.FileReader;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -25,8 +26,12 @@ import javax.swing.SwingConstants;
 public class Login extends JFrame{
     int width=800;
     int height=500;
+    public static String superUser;// this contains the username of the person who has logged in
     String user_name;
     String pass_word;
+    Supervisor sup_obj=new Supervisor();
+    Staff staff_obj=new Staff();
+    Admin admin_obj=new Admin();
     public Login(){
         super("Login Form");
         setSize(width,height);
@@ -67,11 +72,39 @@ public class Login extends JFrame{
                 pass_word=password.getText();
                 
                 try{
-                    BufferedReader in = new BufferedReader(new FileReader("database/input.txt"));
+                    BufferedReader in = new BufferedReader(new FileReader("database/userinfo.csv"));
                     String line;
                     int ind=0;
+                    int flag=0;
+                    String[] var=null;
                     while((line = in.readLine()) != null){
                         
+                        var=line.split(",");
+                        if(var[3].equals(user_name) && var[4].equals(pass_word)){
+                            superUser=user_name;
+                            flag=1;
+                            break;
+                        }
+                        else{
+                            continue;
+                        }
+                    }
+                    if(flag==1){
+                        setVisible(false);
+                        if(var[1].equals("Supervisor")){
+                            sup_obj.setVisible(true);
+                        }
+                        else if(var[1].equals("Admin")){
+                            admin_obj.setVisible(true);
+                        }
+                        else if(var[1].equals("Staff")){
+                            staff_obj.setVisible(true);
+                        }
+                    }
+                    else{
+                        JOptionPane.showMessageDialog (null, "Invalid Credentials!", "Invalid", JOptionPane.INFORMATION_MESSAGE);
+                        userName.setText("");
+                        password.setText("");
                     }
                     
                 }

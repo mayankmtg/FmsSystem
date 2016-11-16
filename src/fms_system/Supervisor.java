@@ -83,10 +83,6 @@ public class Supervisor extends JFrame{
         add(Task_reports);
         
         
-        this.setVisible(true);
-    }
-    public static void main(String[] args)
-    {
-        Supervisor s=new Supervisor();
+        
     }
 }

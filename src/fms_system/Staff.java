@@ -60,12 +60,5 @@ public class Staff extends JFrame{
         Update_status.setLocation(50,170);
         Update_status.setSize(200,50);
         add(Update_status);
-        
-        
-        this.setVisible(true);
     }
-    //public static void main(String[] args)
-    //{
-       // Staff s=new Staff();
-    //}
 }
