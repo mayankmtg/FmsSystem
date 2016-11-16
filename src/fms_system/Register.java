@@ -69,47 +69,22 @@ public class Register extends JFrame{
         title.setLocation(300, 10);
         title.setSize(200, 40);
         add(title);
+        JLabel Texts[]=new JLabel[8];
         
-        JLabel ID=new JLabel("ID:");
-        ID.setLocation(300, 90);
-        ID.setSize(100, 20);
-        add(ID);
+        Texts[0]=new JLabel("ID:");
+        Texts[1]=new JLabel("Type:");
+        Texts[2]=new JLabel("Name:");
+        Texts[3]=new JLabel("User Name:");
+        Texts[4]=new JLabel("Password:");
+        Texts[5]=new JLabel("DOB:");
+        Texts[6]=new JLabel("Address:");
+        Texts[7]=new JLabel("Department:");
         
-        JLabel Type=new JLabel("Type:");
-        Type.setLocation(300, 140);
-        Type.setSize(100, 20);
-        add(Type);
-        
-        JLabel  Name=new JLabel("Name:");
-        Name.setLocation(300, 190);
-        Name.setSize(100, 20);
-        add(Name);
-        
-        JLabel uname=new JLabel("User Name:");
-        uname.setLocation(300, 240);
-        uname.setSize(100, 20);
-        add(uname);
-        
-        JLabel pass=new JLabel("Password:");
-        pass.setLocation(300, 290);
-        pass.setSize(100, 20);
-        add(pass);
-        
-        JLabel DOB=new JLabel("DOB:");
-        DOB.setLocation(300, 340);
-        DOB.setSize(100, 20);
-        add(DOB);
-        
-        JLabel addr=new JLabel("Address:");
-        addr.setLocation(300, 390);
-        addr.setSize(100, 20);
-        add(addr);
-        
-        JLabel dept=new JLabel("Department:");
-        dept.setLocation(300, 440);
-        dept.setSize(100, 20);
-        add(dept);
-        
+        for(int i=0;i<8;i++){
+            Texts[i].setLocation(300, 90+50*i);
+            Texts[i].setSize(100,20);
+            add(Texts[i]);
+        }
         ///////////////////////////////////////
         JTextField [] Fields=new JTextField[8];
         Fields[0]=new JTextField();

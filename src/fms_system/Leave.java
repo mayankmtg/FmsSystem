@@ -37,65 +37,42 @@ public class Leave extends JFrame{
         title.setSize(200, 40);
         add(title);
         
-        JLabel person=new JLabel("To Whome:");
-        person.setLocation(300, 90);
-        person.setSize(100, 20);
-        add(person);
+        JLabel Texts[]=new JLabel[4];
+        Texts[0]=new JLabel("To Whome:");
+        Texts[1]=new JLabel("Reason:");
+        Texts[2]=new JLabel("Start Date:");
+        Texts[3]=new JLabel("End Date:");
         
-        JLabel Reason=new JLabel("Reason:");
-        Reason.setLocation(300, 140);
-        Reason.setSize(100, 20);
-        add(Reason);
-        
-        JLabel  Start=new JLabel("Start Date:");
-        Start.setLocation(300, 190);
-        Start.setSize(100, 20);
-        add(Start);
-        
-        JLabel End=new JLabel("End Date:");
-        End.setLocation(300, 240);
-        End.setSize(100, 20);
-        add(End);
-        
+        for(int i=0;i<4;i++){
+            Texts[i].setLocation(400, 90+50*i);
+            Texts[i].setSize(200,20);
+            add(Texts[i]);
+        }
         ///////////////////////////////////////
+        JTextField[] Fields=new JTextField[4];
         
-        JTextField ID_text=new JTextField();
-        ID_text.setLocation(400, 90);
-        ID_text.setSize(200,20);
-        ID_text.setEnabled(false);
-        add(ID_text);
-        
-        JTextField Type_text=new JTextField();
-        Type_text.setLocation(400, 140);
-        Type_text.setSize(200,20);
-        Reason.requestFocus();
-        add(Type_text);
-        
-        JTextField Name_text=new JTextField();
-        Name_text.setLocation(400, 190);
-        Name_text.setSize(200,20);
-        add(Name_text);
-        
-        JTextField userName=new JTextField();
-        userName.setLocation(400, 240);
-        userName.setSize(200,20);
-        add(userName);
-        
+        for(int i=0;i<4;i++){
+            if(i==0) { 
+                Fields[0].setEnabled(false);
+                continue;
+            }
+            Fields[i]=new JTextField();
+            Fields[i].setLocation(400, 90+50*i);
+            Fields[i].setSize(200,20);
+            add(Fields[i]);
+        }
         JButton sub=new JButton("Apply");
         sub.setLocation(350, 300);
         sub.setSize(200,40);
         sub.setForeground(Color.white);
         sub.setBackground(Color.red);
-        
         sub.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
                 //code after leave application
             }
-            
         });
         add(sub);
-        
     }
 }
 
