@@ -6,6 +6,10 @@
 package fms_system;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,6 +25,8 @@ import javax.swing.SwingConstants;
 public class Login extends JFrame{
     int width=800;
     int height=500;
+    String user_name;
+    String pass_word;
     public Login(){
         super("Login Form");
         setSize(width,height);
@@ -53,6 +59,29 @@ public class Login extends JFrame{
         sub.setLocation(400, 250);
         sub.setSize(100,30);
         sub.setBackground(Color.orange);
+        
+        sub.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                user_name=userName.getText();
+                pass_word=password.getText();
+                
+                try{
+                    BufferedReader in = new BufferedReader(new FileReader("database/input.txt"));
+                    String line;
+                    int ind=0;
+                    while((line = in.readLine()) != null){
+                        
+                    }
+                    
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                
+            }
+            
+        });
         
         add(title);
         add(userName);

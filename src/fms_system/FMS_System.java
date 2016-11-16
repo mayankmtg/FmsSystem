@@ -20,7 +20,7 @@ public class FMS_System extends JFrame{
      */
     int width=800;
     int height=500;
-    Registeration register_obj=new Registeration();
+    Register register_obj=new Register();
     Login login_obj=new Login();
     public FMS_System(){
         super("FMS_System");
@@ -30,9 +30,8 @@ public class FMS_System extends JFrame{
         setLayout(null);
         
         JLabel title=new JLabel("Faculty Management Services System",SwingConstants.CENTER);
-        title.setLocation(300, 100);
-        title.setSize(200, 40);
-        title.setBackground(Color.white);
+        title.setLocation(200, 100);
+        title.setSize(400, 40);
         title.setForeground(Color.red);
         title.setOpaque(true);
         
