@@ -30,8 +30,6 @@ public class Register extends JFrame{
     int height=500;
     Login login_obj=new Login();
     
-    
-    
     public int setID(){
         String s;
         int id=0;
@@ -57,10 +55,8 @@ public class Register extends JFrame{
         }
         finally{
             return id;
-        }
-        
+        }    
     }
-    
     
     public Register(){
         super("Registeration");
@@ -121,37 +117,11 @@ public class Register extends JFrame{
         Fields[0].setSize(200,20);
         Fields[0].setEnabled(false);
         Fields[0].setText(""+this.setID());
-        
-        Fields[1]=new JTextField();
-        Fields[1].setLocation(400, 140);
-        Fields[1].setSize(200,20);
-        Fields[1].requestFocus();
-        
-        Fields[2]=new JTextField();
-        Fields[2].setLocation(400, 190);
-        Fields[2].setSize(200,20);
-        
-        Fields[3]=new JTextField();
-        Fields[3].setLocation(400, 240);
-        Fields[3].setSize(200,20);
-        
-        Fields[4]=new JPasswordField();
-        Fields[4].setLocation(400, 290);
-        Fields[4].setSize(200,20);
-        
-        Fields[5]=new JTextField();
-        Fields[5].setLocation(400, 340);
-        Fields[5].setSize(200,20);
-        
-        Fields[6]=new JTextField();
-        Fields[6].setLocation(400, 390);
-        Fields[6].setSize(200,20);
-        
-        Fields[7]=new JTextField();
-        Fields[7].setLocation(400, 440);
-        Fields[7].setSize(200,20);
-        
-        for(int i=0;i<8;i++){
+        add(Fields[0]);
+        for(int i=1;i<8;i++){
+            Fields[i]=new JTextField();
+            Fields[i].setLocation(400, 90+50*i);
+            Fields[i].setSize(200,20);
             add(Fields[i]);
         }
         JButton sub=new JButton("Submit");
@@ -161,20 +131,43 @@ public class Register extends JFrame{
         sub.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
+                int check=0;
                 try{
-                    PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
-                    String userData="";
-                    for(int i=0;i<7;i++){
-                        userData+=Fields[i].getText() +",";
+                    BufferedReader in = new BufferedReader(new FileReader("database/userinfo.csv"));
+                    String line;
+                    check=0;
+                    while((line = in.readLine()) != null){
+                        String[] var = line.split(",");
+                        if(var[3].equals(Fields[3].getText())){
+                            check=1;
+                            break;
+                        }
                     }
-                    userData+=Fields[7].getText();
-                    writer.println(userData);
-                    writer.close();
-                } catch (Exception e) {
                 }
-                JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! You have been succssfully registered. Please Login Now!", "Thank You", JOptionPane.INFORMATION_MESSAGE);
-                setVisible(false);
-                login_obj.setVisible(true);
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                if(check==1){
+                    JOptionPane.showMessageDialog (null, "User Name is Taken!! Please change User Name", "Sorry", JOptionPane.INFORMATION_MESSAGE);
+                    Fields[3].setText("");
+                    Fields[3].requestFocus();
+                }
+                else{
+                    try{
+                        PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
+                        String userData="";
+                        for(int i=0;i<7;i++){
+                            userData+=Fields[i].getText() +",";
+                        }
+                        userData+=Fields[7].getText();
+                        writer.println(userData);
+                        writer.close();
+                    } catch (Exception e) {
+                    }
+                    JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! You have been succssfully registered. Please Login Now!", "Thank You", JOptionPane.INFORMATION_MESSAGE);
+                    setVisible(false);
+                    login_obj.setVisible(true);
+                }
             }
         });
         add(sub);
