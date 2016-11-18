@@ -5,6 +5,9 @@
  */
 package fms_system;
 
+import java.awt.Event;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +22,7 @@ import javax.swing.JLabel;
 public class Admin extends JFrame{
     int width=800;
     int height=500;
+    UpdateEmployee update_obj=new UpdateEmployee();
     public Admin(){
         
         super("Admin Interface");
@@ -51,18 +55,20 @@ public class Admin extends JFrame{
         home.setSize(250,50);
         add(home);
         
-        JButton inquire=new JButton("Add/Delete/view Staff");
+        JButton inquire=new JButton("Update Employees");
         inquire.setLocation(50,110);
         inquire.setSize(250,50);
+        inquire.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                update_obj.setVisible(true);
+            }
+        });
         add(inquire);
         
-        JButton inquire2=new JButton("Add/Delete/view Supervisor");
-        inquire2.setLocation(50,170);
-        inquire2.setSize(250,50);
-        add(inquire2);
-        
         JButton Approve_requests=new JButton("Approve Logistics requests");
-        Approve_requests.setLocation(50,230);
+        Approve_requests.setLocation(50,170);
         Approve_requests.setSize(250,50);
         add(Approve_requests);
 
