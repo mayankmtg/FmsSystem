@@ -58,6 +58,7 @@ public class Register extends JFrame{
         }    
     }
     
+    
     public Register(){
         super("Registeration");
         setSize(width,height);
@@ -99,6 +100,23 @@ public class Register extends JFrame{
             Fields[i].setSize(200,20);
             add(Fields[i]);
         }
+        
+        Fields[3].setEnabled(false);
+        Fields[2].addFocusListener(new java.awt.event.FocusListener() {
+            public void focusGained(java.awt.event.FocusEvent focusEvent) {}
+            public void focusLost(java.awt.event.FocusEvent focusEvent) {
+                try {
+                    if(Fields[2].getText().equals("")){
+                        
+                    }
+                    else{
+                        Fields[3].setText("" + Fields[2].getText() + Fields[0].getText() );
+                    }
+                } catch (ClassCastException ignored) {
+                }
+            }
+        });
+        
         JButton sub=new JButton("Submit");
         sub.setLocation(200, 470);
         sub.setSize(200,20);

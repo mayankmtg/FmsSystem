@@ -6,11 +6,14 @@
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Staff.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Login.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Leave.java</file>
+            <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Logistic_Approval_Request.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/TaskReport.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/FMS_System.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Supervisor.java</file>
-            <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Registeration.java</file>
+            <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Logistic_Requirement_Request.java</file>
+            <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Register.java</file>
             <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Admin.java</file>
+            <file>file:/home/mayank/NetBeansProjects/FMS_System/src/fms_system/Task.java</file>
         </group>
     </open-files>
 </project-private>
