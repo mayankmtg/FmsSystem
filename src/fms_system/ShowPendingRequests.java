@@ -42,7 +42,7 @@ public class ShowPendingRequests extends JFrame{
         String line;
         BufferedReader reader;
             try{       
-                reader = new BufferedReader(new FileReader("database/userinfo.csv"));
+                reader = new BufferedReader(new FileReader("database/registerRequests.csv"));
                 while((line = reader.readLine()) != null){
                    tableModel.addRow(line.split(",")); 
                 }

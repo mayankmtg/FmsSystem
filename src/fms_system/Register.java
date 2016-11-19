@@ -32,29 +32,20 @@ public class Register extends JFrame{
     
     public int setID(){
         String s;
-        int id=0;
+        int id=-1;
         try{
-            BufferedReader in = new BufferedReader(new FileReader("database/userinfo.csv"));
+            BufferedReader in = new BufferedReader(new FileReader("database/getId.csv"));
             String line;
-            int ind=0;
             String[] var = null;
-            while((line = in.readLine()) != null){
-                var = line.split(",");
-                ind++;
-            }
-            if(ind==0){
-                id=1;
-            }
-            else{
-                id=Integer.parseInt(var[0])+1;
-            }
-            
+            line = in.readLine();
+            var = line.split(",");
+            id=Integer.parseInt(line);
         }
         catch(Exception e){
             e.printStackTrace();
         }
         finally{
-            return id;
+            return id+1;
         }    
     }
     
@@ -148,13 +139,16 @@ public class Register extends JFrame{
                 else{
                     try{
                         PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
+                        PrintWriter writer1 = new PrintWriter(new FileWriter("database/getId.csv"));
                         String userData="";
                         for(int i=0;i<7;i++){
                             userData+=Fields[i].getText() +",";
                         }
                         userData+=Fields[7].getText();
                         writer.println(userData);
+                        writer1.println(Fields[0].getText());
                         writer.close();
+                        writer1.close();
                     } catch (Exception e) {
                     }
                     JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! You have been succssfully registered. Please Login Now!", "Thank You", JOptionPane.INFORMATION_MESSAGE);
