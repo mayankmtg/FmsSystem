@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 public class Admin extends JFrame{
     int width=800;
     int height=500;
-    UpdateEmployee update_obj=new UpdateEmployee();
+    ShowPendingRequests update_obj=new ShowPendingRequests();
     public Admin(){
         
         super("Admin Interface");
@@ -55,7 +55,7 @@ public class Admin extends JFrame{
         home.setSize(250,50);
         add(home);
         
-        JButton inquire=new JButton("Update Employees");
+        JButton inquire=new JButton("Show Pending Requests");
         inquire.setLocation(50,110);
         inquire.setSize(250,50);
         inquire.addActionListener(new ActionListener(){
