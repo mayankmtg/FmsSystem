@@ -138,7 +138,7 @@ public class Register extends JFrame{
                 }
                 else{
                     try{
-                        PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
+                        PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv",true));
                         PrintWriter writer1 = new PrintWriter(new FileWriter("database/getId.csv"));
                         String userData="";
                         for(int i=0;i<7;i++){

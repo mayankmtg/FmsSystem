@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -29,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author mayank
+ * @author amit
  */
 public class ShowPendingRequests extends JFrame{
     int width=1000,height=700;
@@ -52,6 +55,35 @@ public class ShowPendingRequests extends JFrame{
                 JOptionPane.showMessageDialog(null, "Error");
                 e.printStackTrace();
             }
+    }
+    
+    public void deleteRequest(){
+        String line;
+        BufferedReader reader;
+        
+        int i=contactTable.getSelectedRow();
+        
+        if(i>=0){
+            tableModel.removeRow(i);
+            JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv"));
+            String userData="";
+            int j,k;
+            for(j=0;j<contactTable.getRowCount();j++){
+                for (k=0;k<contactTable.getColumnCount()-1;k++){
+                    userData+=contactTable.getModel().getValueAt(j,k);
+                    userData+=",";
+                }
+                userData+=contactTable.getModel().getValueAt(j,k+1);
+                userData+="\r\n";
+            }
+            writer.println(userData);
+            writer.close();
+        } catch (Exception e) {
+        }
     }
     
     public ShowPendingRequests(){
@@ -128,11 +160,7 @@ public class ShowPendingRequests extends JFrame{
         Add.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                int i=contactTable.getSelectedRow();
-                if(i>=0){
-                    tableModel.removeRow(i);
-                    JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
-                }
+                
             }
         });
         button_panel.add(Add);
@@ -143,16 +171,14 @@ public class ShowPendingRequests extends JFrame{
         Back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
+                //admin_obj.setVisible(true);
+                //setVisible(false);
             }
         });
         button_panel.add(Back);
         button_panel.setLocation(width-200,100);
         button_panel.setSize(200,600);
         add(button_panel);
-        
-        
-        
     }
     
 }
