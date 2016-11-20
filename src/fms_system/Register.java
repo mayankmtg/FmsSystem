@@ -90,16 +90,20 @@ public class Register extends JFrame{
             Fields[i]=new JTextField();
             Fields[i].setLocation(400, 90+50*i);
             Fields[i].setSize(200,20);
-            if(i!=1 || i!=7){
+            if(i!=1 && i!=7){
                 add(Fields[i]);
             }
         }
         
-        String[] type_vals={"Supervisor", "Staffer"};
+        String[] type_vals={"","Supervisor", "Staffer"};
         JComboBox type_job=new JComboBox(type_vals);
-        type_job.setSize(200,20);
-        type_job.setLocation(400, 140);
+        type_job.setBounds(400, 140,200,20);  
         add(type_job);
+        
+        String[] dep_vals={"", "Electricity","HVAC","Audio/Video","Security","Housekeeping"};
+        JComboBox dep_job=new JComboBox(dep_vals);
+        dep_job.setBounds(400, 90+7*50,200,20);  
+        add(dep_job);
         
         Fields[3].setEnabled(false);
         Fields[2].addFocusListener(new java.awt.event.FocusListener() {
@@ -125,6 +129,8 @@ public class Register extends JFrame{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 int check=0;
+                Fields[1].setText(type_job.getSelectedItem().toString());
+                Fields[7].setText(dep_job.getSelectedItem().toString());
                 try{
                     BufferedReader in = new BufferedReader(new FileReader("database/userinfo.csv"));
                     String line;
@@ -156,6 +162,7 @@ public class Register extends JFrame{
                         userData+=Fields[7].getText();
                         writer.println(userData);
                         writer1.println(Fields[0].getText());
+                        
                         writer.close();
                         writer1.close();
                     } catch (Exception e) {

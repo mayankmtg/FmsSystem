@@ -45,8 +45,6 @@ public class Supervisor extends JFrame{
         time.setSize(250,20);
         add(time);
         
-        
-
         JButton inquire=new JButton("Add/Delete/view Staff");
         inquire.setLocation(50,50);
         inquire.setSize(200,50);

@@ -23,6 +23,7 @@ public class Admin extends JFrame{
     int width=800;
     int height=500;
     ShowPendingRequests update_obj=new ShowPendingRequests();
+    Task task_obj;
     public Admin(){
         
         super("Admin Interface");
@@ -67,10 +68,18 @@ public class Admin extends JFrame{
         });
         add(inquire);
         
-        JButton Approve_requests=new JButton("Approve Logistics requests");
-        Approve_requests.setLocation(50,170);
-        Approve_requests.setSize(250,50);
-        add(Approve_requests);
+        JButton Task_Assign=new JButton("Assign Tasks");
+        Task_Assign.setLocation(50,170);
+        Task_Assign.setSize(250,50);
+        Task_Assign.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                task_obj=new Task();
+                task_obj.setVisible(true);
+            }
+        });
+        add(Task_Assign);
 
     }
 }

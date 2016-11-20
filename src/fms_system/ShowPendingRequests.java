@@ -87,13 +87,25 @@ public class ShowPendingRequests extends JFrame{
         
         try{
             PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
+            
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/Supervisors.csv",true));
+            PrintWriter writer3 = new PrintWriter(new FileWriter("database/Staffer.csv",true));
             String userData="";
             for(int j=0;j<7;j++){
                 userData+=contactTable.getModel().getValueAt(i, j) +",";
             }
             userData+=contactTable.getModel().getValueAt(i, 7);
+            if(contactTable.getModel().getValueAt(i, 1).equals("Supervisor")){
+                writer2.println(userData);
+                writer2.close();
+            }
+            else{
+                writer3.println(userData);
+                writer3.close();
+            }
             writer.println(userData);
             writer.close();
+            
             
             if(i>=0){
                 tableModel.removeRow(i);
@@ -113,6 +125,7 @@ public class ShowPendingRequests extends JFrame{
                 if(j!=x-1)
                     userData1+="\r\n";
             }
+            
             writer1.println(userData1);
             writer1.close();
         } 
