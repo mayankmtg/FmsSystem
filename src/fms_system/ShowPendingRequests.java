@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package fms_system;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,13 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -58,31 +49,74 @@ public class ShowPendingRequests extends JFrame{
     }
     
     public void deleteRequest(){
-        String line;
-        BufferedReader reader;
         
         int i=contactTable.getSelectedRow();
-        
+        int x=contactTable.getRowCount();
+        int y=contactTable.getColumnCount();
         if(i>=0){
             tableModel.removeRow(i);
-            JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+            x--;
+            JOptionPane.showMessageDialog (null, "Request Rejected!!", "Done", JOptionPane.INFORMATION_MESSAGE);
         }
         
         try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv"));
+            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv",false));
             String userData="";
             int j,k;
-            for(j=0;j<contactTable.getRowCount();j++){
-                for (k=0;k<contactTable.getColumnCount()-1;k++){
-                    userData+=contactTable.getModel().getValueAt(j,k);
+            for(j=0;j<x;j++){
+                System.out.println();
+                for (k=0;k<y-1;k++){
+                    userData+=contactTable.getModel().getValueAt(j,k).toString();
                     userData+=",";
                 }
-                userData+=contactTable.getModel().getValueAt(j,k+1);
-                userData+="\r\n";
+                userData+=contactTable.getModel().getValueAt(j,y-1);
+                if(j!=x-1)
+                    userData+="\r\n";
             }
             writer.println(userData);
             writer.close();
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
+        }
+    }
+    
+    public void hire(){
+        int i=contactTable.getSelectedRow();
+        int x=contactTable.getRowCount();
+        int y=contactTable.getColumnCount();
+        
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
+            String userData="";
+            for(int j=0;j<7;j++){
+                userData+=contactTable.getModel().getValueAt(i, j) +",";
+            }
+            userData+=contactTable.getModel().getValueAt(i, 7);
+            writer.println(userData);
+            writer.close();
+            
+            if(i>=0){
+                tableModel.removeRow(i);
+                x--;
+                JOptionPane.showMessageDialog (null, "Person Added To Database!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+            }
+            PrintWriter writer1 = new PrintWriter(new FileWriter("database/registerRequests.csv",false));
+            String userData1="";
+            int j,k;
+            for(j=0;j<x;j++){
+                System.out.println();
+                for (k=0;k<y-1;k++){
+                    userData1+=contactTable.getModel().getValueAt(j,k).toString();
+                    userData1+=",";
+                }
+                userData1+=contactTable.getModel().getValueAt(j,y-1);
+                if(j!=x-1)
+                    userData1+="\r\n";
+            }
+            writer1.println(userData1);
+            writer1.close();
+        } 
+        catch (Exception e) {
         }
     }
     
@@ -122,8 +156,6 @@ public class ShowPendingRequests extends JFrame{
         
         //Button Panel
         button_panel=new JPanel(new GridLayout(4,1,3,100));
-        
-        
         JButton View=new JButton("Show Requests");
         View.setBackground(Color.cyan);
         View.addActionListener(new ActionListener(){
@@ -139,31 +171,34 @@ public class ShowPendingRequests extends JFrame{
         });
         button_panel.add(View);
         
-        
         Delete.setEnabled(false);
         Delete.setBackground(Color.green);
         Delete.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
-                int i=contactTable.getSelectedRow();
-                if(i>=0){
-                    tableModel.removeRow(i);
-                    JOptionPane.showMessageDialog (null, "Request Rejected", "Done", JOptionPane.INFORMATION_MESSAGE);
-                }
+                deleteRequest();
+                Delete.setEnabled(false);
+                Add.setEnabled(false);
             }
         });
-        button_panel.add(Delete);
-        
+        button_panel.add(Delete); 
         
         Add.setEnabled(false);
         Add.setBackground(Color.green);
         Add.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
+                hire();
             }
         });
         button_panel.add(Add);
+        
+        //title
+        JLabel title =new JLabel("Request Status");
+        title.setLocation(400,50);
+        title.setSize(300,20);
+        title.setFont(new Font("Serif", Font.PLAIN, 24));
+        add(title);
         
         JButton Back=new JButton("Back");
         Back.setBackground(Color.red);
@@ -180,5 +215,4 @@ public class ShowPendingRequests extends JFrame{
         button_panel.setSize(200,600);
         add(button_panel);
     }
-    
 }

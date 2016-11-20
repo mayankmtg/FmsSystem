@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -89,8 +90,16 @@ public class Register extends JFrame{
             Fields[i]=new JTextField();
             Fields[i].setLocation(400, 90+50*i);
             Fields[i].setSize(200,20);
-            add(Fields[i]);
+            if(i!=1 || i!=7){
+                add(Fields[i]);
+            }
         }
+        
+        String[] type_vals={"Supervisor", "Staffer"};
+        JComboBox type_job=new JComboBox(type_vals);
+        type_job.setSize(200,20);
+        type_job.setLocation(400, 140);
+        add(type_job);
         
         Fields[3].setEnabled(false);
         Fields[2].addFocusListener(new java.awt.event.FocusListener() {
