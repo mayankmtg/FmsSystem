@@ -12,11 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -115,12 +119,60 @@ public class Task extends JFrame{
             }
             
         });
-        JPanel sub_panel=new JPanel(new GridLayout(1,2,30,50));
+        JPanel sub_panel=new JPanel(new GridLayout(1,2,30,30));
         sub_panel.add(sub);
         sub_panel.add(back);
         sub_panel.setSize(350,30);
         sub_panel.setLocation(600,600);
         add(sub_panel);
+        
+        
+        //Staffer
+        JLabel no_of_staffer=new JLabel("No. of Staffer:");
+        JTextField no_field=new JTextField();
+        JButton getWorkers=new JButton("Get Workers");
+        
+        getWorkers.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int x=Integer.parseInt(no_field.getText());
+                String line;
+                BufferedReader reader;
+                ArrayList<String> staff=new ArrayList<>();
+                try{       
+                    reader = new BufferedReader(new FileReader("database/Staffer.csv"));
+                    while((line = reader.readLine()) != null){
+                       staff.add(line.split(",")[3]);
+                    }
+                    reader.close();
+                 }
+                catch(IOException e){
+                    JOptionPane.showMessageDialog(null, "Error");
+                    e.printStackTrace();
+                }
+                int y=staff.size();
+                String[] names=new String[y];
+               
+                JComboBox[] combos=new JComboBox[x];
+                for(int i=0;i<x;i++){
+                    combos[i]=new JComboBox(names);
+                    
+                }
+            }
+            
+        });
+        JPanel nos=new JPanel(new GridLayout(1,3,30,50));
+        nos.add(no_of_staffer);
+        nos.add(no_field);
+        nos.add(getWorkers);
+        nos.setLocation(600,200);
+        nos.setSize(350,30);
+        add(nos);
+        
+        //combos
+        
+        
+        
     }
     
 }
