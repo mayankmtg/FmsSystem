@@ -12,8 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -39,7 +43,7 @@ public class Task extends JFrame{
     int width=1000;
     int height=700;
     JPanel Left;
-    public int setID(){
+    public int setTaskID(){
         String s;
         int id=-1;
         try{
@@ -57,6 +61,36 @@ public class Task extends JFrame{
             return id+1;
         }    
     }
+    public void setTaskFile(int id){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv"));
+            writer.println(id);
+            writer.close();
+        } catch (IOException ex) {}
+    }
+    public String[] sup_string(){
+        int id=-1;
+        ArrayList<String> supervisors=new ArrayList<String>();
+        try{
+            BufferedReader in = new BufferedReader(new FileReader("database/Supervisors.csv"));
+            String line;
+            while((line = in.readLine()) != null){
+                String[] var = line.split(",");
+                supervisors.add(var[3]);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            String[] s=new String[supervisors.size()];
+            int ind=0;
+            for (String k: supervisors){
+                s[ind++]=k;
+            }
+            return s;
+        }
+    }
     
     public Task(){
         
@@ -68,33 +102,66 @@ public class Task extends JFrame{
         
         JLabel title =new JLabel("Task Assigner");
         title.setLocation(400,50);
-        title.setSize(300,20);
+        title.setSize(300,30);
         title.setFont(new Font("Serif", Font.PLAIN, 24));
         add(title);
         
-        JLabel Texts[]=new JLabel[7];
+        JLabel Texts[]=new JLabel[8];
         
         Texts[0]=new JLabel("Task ID:");
         Texts[1]=new JLabel("TaskName:");
-        Texts[2]=new JLabel("Task Desc. Dept.:");
-        Texts[3]=new JLabel("Supervisor:");
-        //Texts[4]=new JLabel("No. of Staff:");
-        Texts[4]=new JLabel("Equipment:");
-        Texts[5]=new JLabel("Status:");
-        Texts[6]=new JLabel("Deadline:");
+        Texts[2]=new JLabel("Task Desc.:");
+        Texts[3]=new JLabel("Task Dept.:");
+        Texts[4]=new JLabel("Supervisor:");
+        Texts[5]=new JLabel("Equipment:");
+        Texts[6]=new JLabel("Status:");
+        Texts[7]=new JLabel("Deadline:");
         
         ///////////////////////////////////////
         
-        JTextField Fields[]=new JTextField[7];
+        JTextField Fields[]=new JTextField[8];
         
-        Left=new JPanel(new GridLayout(7,2,30,50));
+        String[] dept_vals={"", "Electricity","HVAC","Audio/Video","Security","Housekeeping"};
+        JComboBox dept_combo=new JComboBox(dept_vals);
+        
+        JComboBox sup_combo=new JComboBox(sup_string());
+        
+        Left=new JPanel(new GridLayout(8,2,30,30));
         for(int i=0;i<7;i++){
             Fields[i]=new JTextField();
+            if(i==0){
+                Fields[0].setText(""+setTaskID());
+                Fields[0].setEnabled(false);
+            }
             Fields[i].setSize(200,20);
             Texts[i].setSize(200,20);
             Left.add(Texts[i]);
-            Left.add(Fields[i]);
+            if(i==3){
+                if(Login.getCurrentType().equals("Supervisor")){
+                    Left.add(Fields[i]);
+                    Fields[i].setEnabled(false);
+                    Fields[i].setText(Login.getCurrentDept());
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    Left.add(dept_combo);
+                }
+            }
+            else if(i==4){
+                if(Login.getCurrentType().equals("Supervisor")){
+                    Left.add(Fields[i]);
+                    Fields[i].setEnabled(false);
+                    Fields[i].setText(Login.getCurrentUser());
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    Left.add(sup_combo);
+                }
+                
+            }
+            else{            
+                Left.add(Fields[i]);
+            }
         }
+        
         Left.setSize(450,450);
         Left.setLocation(50,200);
         //Left.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -108,9 +175,8 @@ public class Task extends JFrame{
         sub.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                //code after the submit of the Task
+                setTaskFile(Integer.parseInt(Fields[0].getText()));
             }
-            
         });
         
         JButton back=new JButton("Back");

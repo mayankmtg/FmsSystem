@@ -10,6 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,12 +31,33 @@ import javax.swing.SwingConstants;
 public class Login extends JFrame{
     int width=800;
     int height=500;
-    public static String superUser;// this contains the username of the person who has logged in
     String user_name;
     String pass_word;
     Supervisor sup_obj=new Supervisor();
     Staff staff_obj=new Staff();
     Admin admin_obj=new Admin();
+    private static String current_user_name;// this contains the username of the person who has logged in
+    private static String current_user_dept;
+    private static String current_user_type;
+    public static String getCurrentUser(){
+        return current_user_name;
+    }
+    
+    public static String getCurrentDept(){
+        return current_user_dept;
+    }
+    public static String getCurrentType(){
+        return current_user_type;
+    }
+    public void setLog(){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("database/Log.csv",true));
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+            String log=current_user_name + "," + timeStamp;
+            writer.println(log);
+            writer.close();
+        } catch (IOException ex) {}
+    }
     public Login(){
         super("Login Form");
         setSize(width,height);
@@ -81,7 +107,10 @@ public class Login extends JFrame{
                         
                         var=line.split(",");
                         if(var[3].equals(user_name) && var[4].equals(pass_word)){
-                            superUser=user_name;
+                            current_user_name=user_name;
+                            current_user_dept=var[7];
+                            current_user_type=var[1];
+                            setLog();
                             flag=1;
                             break;
                         }
@@ -97,7 +126,7 @@ public class Login extends JFrame{
                         else if(var[1].equals("Admin")){
                             admin_obj.setVisible(true);
                         }
-                        else if(var[1].equals("Staff")){
+                        else if(var[1].equals("Staffer")){
                             staff_obj.setVisible(true);
                         }
                     }

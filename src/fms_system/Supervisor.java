@@ -5,6 +5,8 @@
  */
 package fms_system;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,7 @@ import javax.swing.JLabel;
 public class Supervisor extends JFrame{
     int width=800;
     int height=500;
+    Task task_obj;
     public Supervisor(){
         
         super("Supervisor Interface");
@@ -53,6 +56,15 @@ public class Supervisor extends JFrame{
         JButton Assign_task=new JButton("Assign Task");
         Assign_task.setLocation(50,110);
         Assign_task.setSize(200,50);
+        Assign_task.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                task_obj=new Task();
+                setVisible(false);
+                task_obj.setVisible(true);
+            }
+            
+        });
         add(Assign_task);
         
         JButton Logistics=new JButton("Logistics");
