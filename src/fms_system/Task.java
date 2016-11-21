@@ -15,15 +15,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
 /**
@@ -91,7 +95,7 @@ public class Task extends JFrame{
             Left.add(Texts[i]);
             Left.add(Fields[i]);
         }
-        Left.setSize(450,500);
+        Left.setSize(450,450);
         Left.setLocation(50,200);
         //Left.setBorder(BorderFactory.createLineBorder(Color.black));
         add(Left);
@@ -128,42 +132,54 @@ public class Task extends JFrame{
         
         
         //Staffer
-        JLabel no_of_staffer=new JLabel("No. of Staffer:");
-        JTextField no_field=new JTextField();
-        JButton getWorkers=new JButton("Get Workers");
+        JButton getWorkers=new JButton("Add Selected Worker");
         
+        JPanel staff_combos=new JPanel(new GridLayout(1,2,10,10));
+        staff_combos.setLocation(600,230);
+        staff_combos.setSize(350,300);
+        
+        
+        DefaultListModel listModel = new DefaultListModel();
+        DefaultListModel selectedModel = new DefaultListModel();
+        
+        JList list_staff=new JList();
+        list_staff.setModel(listModel);
+        list_staff.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
+        staff_combos.add(list_staff);
+        
+        JList selected_staff=new JList();
+        selected_staff.setModel(selectedModel);
+        staff_combos.add(selected_staff);
+        
+        add(staff_combos);
+        String line;
+        BufferedReader reader;
+        ArrayList<String> staff=new ArrayList<>();
+        try{       
+            reader = new BufferedReader(new FileReader("database/Staffer.csv"));
+            while((line = reader.readLine()) != null){
+               staff.add(line.split(",")[3]);
+            }
+            reader.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        for(String s:staff){
+            listModel.addElement(s);
+        }
         getWorkers.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                int x=Integer.parseInt(no_field.getText());
-                String line;
-                BufferedReader reader;
-                ArrayList<String> staff=new ArrayList<>();
-                try{       
-                    reader = new BufferedReader(new FileReader("database/Staffer.csv"));
-                    while((line = reader.readLine()) != null){
-                       staff.add(line.split(",")[3]);
-                    }
-                    reader.close();
-                 }
-                catch(IOException e){
-                    JOptionPane.showMessageDialog(null, "Error");
-                    e.printStackTrace();
-                }
-                int y=staff.size();
-                String[] names=new String[y];
-               
-                JComboBox[] combos=new JComboBox[x];
-                for(int i=0;i<x;i++){
-                    combos[i]=new JComboBox(names);
-                    
+                ArrayList<String> task_staff=(ArrayList<String>) list_staff.getSelectedValuesList();
+                for(String s: task_staff){
+                    selectedModel.addElement(s);
                 }
             }
             
         });
-        JPanel nos=new JPanel(new GridLayout(1,3,30,50));
-        nos.add(no_of_staffer);
-        nos.add(no_field);
+        JPanel nos=new JPanel(new GridLayout(1,1,30,50));
         nos.add(getWorkers);
         nos.setLocation(600,200);
         nos.setSize(350,30);
