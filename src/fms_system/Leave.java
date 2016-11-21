@@ -66,13 +66,20 @@ public class Leave extends JFrame{
         JButton sub=new JButton("Apply");
         sub.setLocation(300,600);
         sub.setSize(200,40);
-        sub.setForeground(Color.white);
-        sub.setBackground(Color.red);
+        sub.setBackground(Color.green);
         sub.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae) {
+                
             }
         });
         add(sub);
+        
+        JButton back=new JButton("Back");
+        back.setLocation(550,600);
+        back.setSize(200,40);
+        back.setForeground(Color.white);
+        back.setBackground(Color.red);
+        add(back);
     }
 }
 

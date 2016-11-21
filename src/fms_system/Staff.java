@@ -5,6 +5,8 @@
  */
 package fms_system;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,7 @@ import javax.swing.JLabel;
 public class Staff extends JFrame{
     int width=800;
     int height=500;
+    Leave leave_obj;
     public Staff(){
         
         super("Staff Interface");
@@ -60,5 +63,15 @@ public class Staff extends JFrame{
         Update_status.setLocation(50,170);
         Update_status.setSize(200,50);
         add(Update_status);
+        
+        Send_Leave.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                leave_obj=new Leave();
+                leave_obj.setVisible(true);
+            }
+            
+        });
     }
 }
