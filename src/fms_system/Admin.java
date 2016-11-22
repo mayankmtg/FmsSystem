@@ -24,6 +24,8 @@ public class Admin extends JFrame{
     int height=500;
     ShowPendingRequests update_obj=new ShowPendingRequests();
     Task task_obj;
+    showEmployee employee_obj;
+    employeeStatus status_obj;
     public Admin(){
         
         super("Admin Interface");
@@ -32,6 +34,7 @@ public class Admin extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         
+        ///label for home
         JLabel date=new JLabel();
         Calendar now= Calendar.getInstance();
         int month = now.get(Calendar.MONTH);
@@ -41,7 +44,6 @@ public class Admin extends JFrame{
         date.setLocation(500,50);
         date.setSize(250,20);
         add(date);
-        
         JLabel time=new JLabel();
         int h = now.get(Calendar.HOUR_OF_DAY);
         int m = now.get(Calendar.MINUTE);
@@ -51,11 +53,24 @@ public class Admin extends JFrame{
         time.setSize(250,20);
         add(time);
         
-        JButton home=new JButton("Home");
-        home.setLocation(50,50);
-        home.setSize(250,50);
-        add(home);
         
+        ///employee button
+        JButton view_employee=new JButton("View Employees");
+        view_employee.setLocation(50,50);
+        view_employee.setSize(250,50);
+        view_employee.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                employee_obj=new showEmployee();
+                employee_obj.setVisible(true);
+                setVisible(false);
+            }
+            
+        });
+        add(view_employee);
+        
+        
+        //pending requests
         JButton inquire=new JButton("Show Pending Requests");
         inquire.setLocation(50,110);
         inquire.setSize(250,50);
@@ -68,6 +83,8 @@ public class Admin extends JFrame{
         });
         add(inquire);
         
+        
+        //assign tasks
         JButton Task_Assign=new JButton("Assign Tasks");
         Task_Assign.setLocation(50,170);
         Task_Assign.setSize(250,50);
@@ -80,6 +97,20 @@ public class Admin extends JFrame{
             }
         });
         add(Task_Assign);
+        
+        //view employee status
+        JButton Employee_Status=new JButton("Employee Status");
+        Employee_Status.setLocation(50,230);
+        Employee_Status.setSize(250,50);
+        Employee_Status.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                status_obj=new employeeStatus();
+                status_obj.setVisible(true);
+            }
+        });
+        add(Employee_Status);
 
     }
 }

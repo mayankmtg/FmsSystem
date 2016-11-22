@@ -11,7 +11,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -29,7 +32,7 @@ import javax.swing.SwingConstants;
 public class Register extends JFrame{
     int width=800;
     int height=500;
-    Login login_obj=new Login();
+    FMS_System home_obj;
     
     public int setID(){
         String s;
@@ -48,6 +51,14 @@ public class Register extends JFrame{
         finally{
             return id+1;
         }    
+    }
+    public void writeStatus(String s1,String s2, String s3){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("database/employeeStatus.csv",true));
+            String temp= s1 + "," + s2 + "," + s3 + ",Available";
+            writer.println();
+            writer.close();
+        } catch (IOException ex) {}
     }
     
     
@@ -162,14 +173,14 @@ public class Register extends JFrame{
                         userData+=Fields[7].getText();
                         writer.println(userData);
                         writer1.println(Fields[0].getText());
-                        
                         writer.close();
                         writer1.close();
                     } catch (Exception e) {
                     }
-                    JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! You have been succssfully registered. Please Login Now!", "Thank You", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! Your Request has been forwarded to the Admin.", "Thank You", JOptionPane.INFORMATION_MESSAGE);
                     setVisible(false);
-                    login_obj.setVisible(true);
+                    home_obj=new FMS_System();
+                    home_obj.setVisible(true);
                 }
             }
         });

@@ -1,4 +1,3 @@
-
 package fms_system;
 
 import java.awt.BorderLayout;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.swing.*;
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
  * @author mayank
  * @author amit
  */
-public class ShowPendingRequests extends JFrame{
+public class showEmployee extends JFrame{
     int width=1000,height=700;
     JTable contactTable;
     DefaultTableModel tableModel;
@@ -35,25 +35,23 @@ public class ShowPendingRequests extends JFrame{
         
         String line;
         BufferedReader reader;
+        BufferedReader reader2;
             try{       
-                reader = new BufferedReader(new FileReader("database/registerRequests.csv"));
+                reader = new BufferedReader(new FileReader("database/Supervisors.csv"));
+                reader2= new BufferedReader(new FileReader("database/Staffer.csv"));
                 while((line = reader.readLine()) != null){
                    tableModel.addRow(line.split(",")); 
                 }
                 reader.close();
+                while((line = reader2.readLine()) != null){
+                   tableModel.addRow(line.split(",")); 
+                }
+                reader2.close();
              }
             catch(IOException e){
                 JOptionPane.showMessageDialog(null, "Error");
                 e.printStackTrace();
             }
-    }
-    public void writeStatus(String s1,String s2, String s3){
-        try {
-            PrintWriter writer = new PrintWriter(new FileWriter("database/employeeStatus.csv",true));
-            String temp= s1 + "," + s2 + "," + s3 + ",Available";
-            writer.println(temp);
-            writer.close();
-        } catch (IOException ex) {}
     }
     
     public void deleteRequest(){
@@ -116,10 +114,6 @@ public class ShowPendingRequests extends JFrame{
             
             
             if(i>=0){
-                writeStatus(contactTable.getModel().getValueAt(i,3).toString(),
-                        contactTable.getModel().getValueAt(i,1).toString(), 
-                        contactTable.getModel().getValueAt(i,7).toString()
-                );
                 tableModel.removeRow(i);
                 x--;
                 JOptionPane.showMessageDialog (null, "Person Added To Database!!", "Done", JOptionPane.INFORMATION_MESSAGE);
@@ -145,8 +139,8 @@ public class ShowPendingRequests extends JFrame{
         }
     }
     
-    public ShowPendingRequests(){
-        super("Update Employee Database");
+    public showEmployee(){
+        super("View Employee Database");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -181,7 +175,7 @@ public class ShowPendingRequests extends JFrame{
         
         //Button Panel
         button_panel=new JPanel(new GridLayout(4,1,3,100));
-        JButton View=new JButton("Show Requests");
+        JButton View=new JButton("Show Employees");
         View.setBackground(Color.cyan);
         View.addActionListener(new ActionListener(){
             @Override
