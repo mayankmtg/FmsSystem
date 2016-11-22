@@ -33,9 +33,9 @@ public class Login extends JFrame{
     int height=500;
     String user_name;
     String pass_word;
-    Supervisor sup_obj=new Supervisor();
-    Staff staff_obj=new Staff();
-    Admin admin_obj=new Admin();
+    Supervisor sup_obj;
+    Staff staff_obj;
+    Admin admin_obj;
     private static String current_user_name;// this contains the username of the person who has logged in
     private static String current_user_dept;
     private static String current_user_type;
@@ -121,12 +121,15 @@ public class Login extends JFrame{
                     if(flag==1){
                         setVisible(false);
                         if(var[1].equals("Supervisor")){
+                            sup_obj=new Supervisor();
                             sup_obj.setVisible(true);
                         }
                         else if(var[1].equals("Admin")){
+                            admin_obj=new Admin();
                             admin_obj.setVisible(true);
                         }
                         else if(var[1].equals("Staffer")){
+                            staff_obj=new Staff();
                             staff_obj.setVisible(true);
                         }
                     }

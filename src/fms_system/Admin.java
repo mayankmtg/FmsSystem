@@ -26,6 +26,7 @@ public class Admin extends JFrame{
     Task task_obj;
     showEmployee employee_obj;
     employeeStatus status_obj;
+    showLeaveRequests leave_obj;
     public Admin(){
         
         super("Admin Interface");
@@ -111,6 +112,18 @@ public class Admin extends JFrame{
             }
         });
         add(Employee_Status);
+        JButton leave_req=new JButton("Show Leave Requests");
+        leave_req.setLocation(50,290);
+        leave_req.setSize(250,50);
+        leave_req.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                leave_obj=new showLeaveRequests();
+                leave_obj.setVisible(true);
+            }
+        });
+        add(leave_req);
 
     }
 }

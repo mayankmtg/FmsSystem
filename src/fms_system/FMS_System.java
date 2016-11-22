@@ -20,8 +20,8 @@ public class FMS_System extends JFrame{
      */
     int width=800;
     int height=500;
-    Register register_obj=new Register();
-    Login login_obj=new Login();
+    Register register_obj;
+    Login login_obj;
     public FMS_System(){
         super("FMS_System");
         setSize(width,height);
@@ -46,6 +46,7 @@ public class FMS_System extends JFrame{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 setVisible(false);
+                login_obj=new Login();
                 login_obj.setVisible(true);
             }
             
@@ -61,6 +62,7 @@ public class FMS_System extends JFrame{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 setVisible(false);
+                register_obj=new Register();
                 register_obj.setVisible(true);
             }
             

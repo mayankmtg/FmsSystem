@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DateFormat.Field;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -45,20 +46,24 @@ public class Leave extends JFrame{
         title.setSize(200, 40);
         add(title);
         
-        JLabel Texts[]=new JLabel[4];
-        Texts[0]=new JLabel("To Whom:");
-        Texts[1]=new JLabel("Reason:");
-        Texts[2]=new JLabel("Start Date:");
-        Texts[3]=new JLabel("End Date:");
+        JLabel Texts[]=new JLabel[5];
+        Texts[0]=new JLabel("UserName");
+        Texts[1]=new JLabel("To Whom:");
+        Texts[2]=new JLabel("Reason:");
+        Texts[3]=new JLabel("Start Date:");
+        Texts[4]=new JLabel("End Date:");
         String[] box={"Admin","Supervisor"};
         JComboBox whom=new JComboBox(box);
-        JTextField[] Fields=new JTextField[4];
-        JPanel leave=new JPanel(new GridLayout(4,2,30,30));
-        for(int i=0;i<4;i++)
+        JTextField[] Fields=new JTextField[5];
+        JPanel leave=new JPanel(new GridLayout(5,2,30,30));
+        for(int i=0;i<5;i++)
         {
             Fields[i]=new JTextField();
+            if(i==0){
+                Fields[0].setText(Login.getCurrentUser());
+            }
             leave.add(Texts[i]);
-            if(i!=0)
+            if(i!=1)
                 leave.add(Fields[i]);
             else{
                 leave.add(whom);
@@ -79,8 +84,8 @@ public class Leave extends JFrame{
                 try{
                         PrintWriter writer = new PrintWriter(new FileWriter("database/leave.csv",true));
                         String userData="";
-                        for(int i=0;i<3;i++){
-                            if(Fields[0].getText().equals("Supervisor") && i==0){
+                        for(int i=0;i<4;i++){
+                            if(Fields[1].getText().equals("Supervisor") && i==0){
                                 System.out.print(Fields[0].getText());
                                 userData+=Login.getCurrentDept()+",";
                             }
@@ -93,7 +98,7 @@ public class Leave extends JFrame{
                         } catch (Exception e) {
                     }
                 JOptionPane.showMessageDialog (null,"Hey! You have been succssfully sent a requset.","Thank You", JOptionPane.INFORMATION_MESSAGE);
-                for(int i=1;i<4;i++)
+                for(int i=2;i<5;i++)
                 {
                     Fields[i].setText("");
                 }
