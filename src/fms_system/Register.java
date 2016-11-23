@@ -78,7 +78,7 @@ public class Register extends JFrame{
         PrintWriter writer;
         try {
             writer = new PrintWriter(new FileWriter("database/getId.csv"));
-            writer.println();
+            writer.println(x);
             writer.close();
         } catch (IOException ex) {}
     }

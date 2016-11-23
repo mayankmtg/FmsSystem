@@ -40,106 +40,97 @@ public class showLeaveRequests extends JFrame {
         
         String line;
         BufferedReader reader;
-            try{       
-                reader = new BufferedReader(new FileReader("database/leave.csv"));
-                while((line = reader.readLine()) != null){
-                   if(line.split(",")[1].equals("Admin"))
-                        tableModel.addRow(line.split(",")); 
-                }
-                reader.close();
-             }
-            catch(IOException e){
-                JOptionPane.showMessageDialog(null, "Error");
-                e.printStackTrace();
+        try{
+            reader = new BufferedReader(new FileReader("database/leave.csv"));
+            while((line = reader.readLine()) != null){
+               if(line.split(",")[1].equals(Login.getCurrentDept()))
+                    tableModel.addRow(line.split(",")); 
             }
+            reader.close();
+        }
+        catch(IOException e){}
     }
     public void deleteRequest(){
-        
         int i=leaveTable.getSelectedRow();
         int x=leaveTable.getRowCount();
         int y=leaveTable.getColumnCount();
+        String line;
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+        String write="";
+        try{
+            reader = new BufferedReader(new FileReader("database/leave.csv"));
+        
+            while((line = reader.readLine()) != null){
+                if(!line.split(",")[0].equals(tableModel.getValueAt(i, 0))){
+                    write+=line;
+                    write+="\r\n";
+                }
+            }
+            reader.close();
+            writer = new PrintWriter(new FileWriter("database/leave.csv"));
+            writer.print(write);
+        }   
+        catch(IOException e){
+        System.out.println("Error");
+        }
+        finally{
+            writer.close();
+        }
+        
         if(i>=0){
             tableModel.removeRow(i);
             x--;
-            JOptionPane.showMessageDialog (null, "Request Rejected!!", "Done", JOptionPane.INFORMATION_MESSAGE);
-        }
-        
-        try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/leave.csv",false));
-            String userData="";
-            int j,k;
-            for(j=0;j<x;j++){
-                System.out.println();
-                for (k=0;k<y-1;k++){
-                    userData+=leaveTable.getModel().getValueAt(j,k).toString();
-                    userData+=",";
-                }
-                userData+=leaveTable.getModel().getValueAt(j,y-1);
-                if(j!=x-1)
-                    userData+="\r\n";
-            }
-            writer.println(userData);
-            writer.close();
-        } 
-        catch (Exception e) {
         }
     }
-    
+    public void update_status(String staffname, String deadline){
+        String line;
+        BufferedReader reader;
+        PrintWriter writer;
+        String write="";
+        try{
+            reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
+            while((line = reader.readLine()) != null){
+                if(line.split(",")[0].equals(staffname)){
+                    String[] var=line.split(",");
+                    write+=var[0]+","+var[1]+","+var[2]+",";
+                    write+="On_Leave till " + deadline;
+                }
+                else{
+                    write+=line;
+                }
+                write+="\r\n";
+            }
+            reader.close();
+            writer = new PrintWriter(new FileWriter("database/employeeStatus.csv"));
+            writer.print(write);
+            writer.close();
+        }   catch(IOException e){}
+    }
     public void acccept() throws IOException{
         int i=leaveTable.getSelectedRow();
         int x=leaveTable.getRowCount();
         int y=leaveTable.getColumnCount();
         BufferedReader reader;
-        if(i>=0){
-            reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
-            PrintWriter writer1 = new PrintWriter(new FileWriter("database/employeeStatus.csv",false)); 
-            String line;
-            String userData2="";
-            int j,k;
-            while((line=reader.readLine()) != null){
-                String[] b=line.split(",");
-                if(b[0].equals(leaveTable.getValueAt(i,0)))
-                {
-                    b[3]="On_leave till "+leaveTable.getValueAt(i,4);
-                }
-                for(j=0;j<4;j++)
-                {
-                    if(j!=3)
-                        userData2+=b[j]+",";
-                    else
-                        userData2+=b[j];
-                }
-                userData2+="\r\n";
-            }
-            writer1.println(userData2);
-            
-        }
-            tableModel.removeRow(i);
-            x--;
-            JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
-            PrintWriter writer = new PrintWriter(new FileWriter("database/leave.csv",false));
-            String userData="";
-            int j,k;
-            for(j=0;j<x;j++){
-                System.out.println();
-                for (k=0;k<y-1;k++){
-                    userData+=leaveTable.getModel().getValueAt(j,k).toString();
-                    userData+=",";
-                }
-                userData+=leaveTable.getModel().getValueAt(j,y-1);
-                if(j!=x-1)
-                    userData+="\r\n";
-            }
-            writer.println(userData);
-            writer.close();
-        }   
+        update_status(tableModel.getValueAt(i, 0).toString(), tableModel.getValueAt(i, 4).toString());
+        deleteRequest();
+     }
     
     public showLeaveRequests(){
+        //frame
         super("Update Employee Database");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
+        
+        //title
+        JLabel title =new JLabel("Leave Requests");
+        title.setLocation(400,50);
+        title.setSize(300,20);
+        title.setFont(new Font("Serif", Font.PLAIN, 24));
+        add(title);
+        
         JButton Delete=new JButton("Reject Request");
         JButton Add =new JButton("Accept Request");
         String columns[] ={"UserName","Whom","Reason","From","To" };
@@ -189,6 +180,7 @@ public class showLeaveRequests extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae){
                 deleteRequest();
+                JOptionPane.showMessageDialog (null, "Request Rejected!!", "Done", JOptionPane.INFORMATION_MESSAGE);
                 Delete.setEnabled(false);
                 Add.setEnabled(false);
             }
@@ -202,14 +194,13 @@ public class showLeaveRequests extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     acccept();
-                } catch (IOException ex) {
-                    Logger.getLogger(showLeaveRequests.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                    JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {}
             }
         });
         button_panel.add(Add);
         
-        //title
+        
         JButton Back=new JButton("Back");
         Back.setBackground(Color.red);
         Back.setForeground(Color.white);

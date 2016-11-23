@@ -113,13 +113,12 @@ public class Task extends JFrame{
         PrintWriter writer;
         String write="";
         try{
-            writer = new PrintWriter(new FileWriter("database/employeeStatus.csv"));
             reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
             while((line = reader.readLine()) != null){
                 if(line.split(",")[0].equals(staffname)){
                     String[] var=line.split(",");
-                    write+=var[0]+var[1]+var[2];
-                    write+="Busy till" + deadline;
+                    write+=var[0]+","+var[1]+","+var[2]+",";
+                    write+="Busy till " + deadline;
                 }
                 else{
                     write+=line;
@@ -127,7 +126,8 @@ public class Task extends JFrame{
                 write+="\r\n";
             }
             reader.close();
-            writer.println(write);
+            writer = new PrintWriter(new FileWriter("database/employeeStatus.csv"));
+            writer.print(write);
             writer.close();
         }   catch(IOException e){}
     }
@@ -267,6 +267,9 @@ public class Task extends JFrame{
                     if(checkStatus(list_staff.getSelectedValue().toString())){
                         selectedModel.addElement(list_staff.getSelectedValue().toString());
                         listModel.removeElementAt(list_staff.getSelectedIndex());
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null,"This Staffer is busy", "Sorry", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
 

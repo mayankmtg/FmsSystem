@@ -67,9 +67,17 @@ public class Supervisor extends JFrame{
         });
         add(Assign_task);
         
-        JButton Logistics=new JButton("Logistics");
+        JButton Logistics=new JButton("Show Leave Requests");
         Logistics.setLocation(50,170);
         Logistics.setSize(200,50);
+        Logistics.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new showLeaveRequests().setVisible(true);
+                setVisible(false);
+            }
+            
+        });
         add(Logistics);
         
         JButton Approve_Requests=new JButton("Approve requests");
@@ -85,6 +93,14 @@ public class Supervisor extends JFrame{
         JButton Send_Leave=new JButton("Send Leave");
         Send_Leave.setLocation(50,350);
         Send_Leave.setSize(200,50);
+        Send_Leave.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new Leave().setVisible(true);
+                setVisible(false);
+            }
+            
+        });
         add(Send_Leave);
         
         JButton Task_reports=new JButton("View Task Reports");
