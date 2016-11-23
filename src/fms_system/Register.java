@@ -60,7 +60,28 @@ public class Register extends JFrame{
             writer.close();
         } catch (IOException ex) {}
     }
-    
+    public void sendRequest(String userData){
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv",true));
+            
+            writer.println(userData);
+
+            writer.close();
+        
+        } catch (Exception e) {}
+        JOptionPane.showMessageDialog (null, "Your Request has been forwarded to the Admin.", "Thank You", JOptionPane.INFORMATION_MESSAGE);
+        setVisible(false);
+        home_obj=new FMS_System();
+        home_obj.setVisible(true);
+    }
+    public void updateID(String x){
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(new FileWriter("database/getId.csv"));
+            writer.println();
+            writer.close();
+        } catch (IOException ex) {}
+    }
     
     public Register(){
         super("Registeration");
@@ -121,14 +142,10 @@ public class Register extends JFrame{
             public void focusGained(java.awt.event.FocusEvent focusEvent) {}
             public void focusLost(java.awt.event.FocusEvent focusEvent) {
                 try {
-                    if(Fields[2].getText().equals("")){
-                        
-                    }
-                    else{
+                    if(!Fields[2].getText().equals("")){
                         Fields[3].setText("" + Fields[2].getText() + Fields[0].getText() );
                     }
-                } catch (ClassCastException ignored) {
-                }
+                } catch (ClassCastException ignored) {}
             }
         });
         
@@ -142,46 +159,13 @@ public class Register extends JFrame{
                 int check=0;
                 Fields[1].setText(type_job.getSelectedItem().toString());
                 Fields[7].setText(dep_job.getSelectedItem().toString());
-                try{
-                    BufferedReader in = new BufferedReader(new FileReader("database/userinfo.csv"));
-                    String line;
-                    check=0;
-                    while((line = in.readLine()) != null){
-                        String[] var = line.split(",");
-                        if(var[3].equals(Fields[3].getText())){
-                            check=1;
-                            break;
-                        }
-                    }
+                String userData="";
+                for(int i=0;i<7;i++){
+                    userData+=Fields[i].getText() +",";
                 }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-                if(check==1){
-                    JOptionPane.showMessageDialog (null, "User Name is Taken!! Please change User Name", "Sorry", JOptionPane.INFORMATION_MESSAGE);
-                    Fields[3].setText("");
-                    Fields[3].requestFocus();
-                }
-                else{
-                    try{
-                        PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv",true));
-                        PrintWriter writer1 = new PrintWriter(new FileWriter("database/getId.csv"));
-                        String userData="";
-                        for(int i=0;i<7;i++){
-                            userData+=Fields[i].getText() +",";
-                        }
-                        userData+=Fields[7].getText();
-                        writer.println(userData);
-                        writer1.println(Fields[0].getText());
-                        writer.close();
-                        writer1.close();
-                    } catch (Exception e) {
-                    }
-                    JOptionPane.showMessageDialog (null, "Hey "+Fields[3].getText()+"! Your Request has been forwarded to the Admin.", "Thank You", JOptionPane.INFORMATION_MESSAGE);
-                    setVisible(false);
-                    home_obj=new FMS_System();
-                    home_obj.setVisible(true);
-                }
+                userData+=Fields[7].getText();
+                sendRequest(userData);
+                updateID(Fields[0].getText());
             }
         });
         add(sub);
@@ -194,7 +178,6 @@ public class Register extends JFrame{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 setVisible(false);
-                //login_obj.setVisible(true);
                 new FMS_System().setVisible(true);
             }
         });
