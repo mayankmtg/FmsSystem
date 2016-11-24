@@ -62,9 +62,9 @@ public class Task extends JFrame{
             return id+1;
         }    
     }
-    public void setTaskID(int id){
+    public void setTaskFileID(int id){
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv"));
+            PrintWriter writer = new PrintWriter(new FileWriter("database/getTaskId.csv"));
             writer.println(id);
             writer.close();
         } catch (IOException ex) {}
@@ -150,7 +150,15 @@ public class Task extends JFrame{
         }   catch(IOException e){}
         return false;
     }
-    
+    public void assignTask(String userData){
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/Tasks.csv",true));
+            writer.println(userData);
+
+            writer.close();
+        
+        } catch (Exception e) {}
+    }
     public Task(){
         //frame settings
         super("Task Assigner");
@@ -283,10 +291,24 @@ public class Task extends JFrame{
             sub.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    setTaskID(Integer.parseInt(Fields[0].getText()));
+                    setTaskFileID(Integer.parseInt(Fields[0].getText()));
+                    int check=0;
+                    if(Fields[3].getText().equals("")){
+                        Fields[3].setText(dept_combo.getSelectedItem().toString());
+                    }
+                    if(Fields[4].getText().equals("")){
+                        Fields[4].setText(sup_combo.getSelectedItem().toString());
+                    }
+                    String userData="";
+                    for(int i=0;i<8;i++){
+                        userData+=Fields[i].getText() +",";
+                    }
                     for(int i=0;i<selectedModel.getSize();i++){
                         update_status(selectedModel.getElementAt(i).toString(),Fields[7].getText());
+                        assignTask(userData+selectedModel.getElementAt(i).toString());
                     }
+                    
+                    JOptionPane.showMessageDialog(null,"Task Successfully Assigned", "Done", JOptionPane.INFORMATION_MESSAGE);                    
                 }
             });
 
@@ -313,7 +335,7 @@ public class Task extends JFrame{
             sub.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    setTaskID(Integer.parseInt(Fields[0].getText()));
+                    setTaskFileID(Integer.parseInt(Fields[0].getText()));
                     
                     ////////////////////
                     //send supervisor notificatio//
@@ -346,7 +368,7 @@ public class Task extends JFrame{
             sub.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    setTaskID(Integer.parseInt(Fields[0].getText()));
+                    setTaskFileID(Integer.parseInt(Fields[0].getText()));
                 }
             });
 

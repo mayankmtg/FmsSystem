@@ -22,6 +22,7 @@ public class Staff extends JFrame{
     int width=800;
     int height=500;
     Leave leave_obj;
+    Logistic_Requirement_Request obj;
     public Staff(){
         
         super("Staff Interface");
@@ -53,6 +54,14 @@ public class Staff extends JFrame{
         Send_Requests.setLocation(50,50);
         Send_Requests.setSize(200,50);
         add(Send_Requests);
+        Send_Requests.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent ae) {
+                obj=new Logistic_Requirement_Request();
+                setVisible(false);
+                obj.setVisible(true);
+            }
+            
+        });
         
         JButton Send_Leave=new JButton("Send Leave");
         Send_Leave.setLocation(50,110);

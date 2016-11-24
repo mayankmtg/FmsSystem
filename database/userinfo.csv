@@ -1,11 +1,5 @@
 1,Admin,mtg,mtg1,mtg,06-11-1996,Delhi,Admin
-2,Supervisor,amit,amit2,amit,06-06-06,fhbs,Security
-3,Staffer,pruthi,pruthi3,fndsjfb,fjdsfjn,njdsnfj,Electricity
-4,Staffer,vasu,vasu4,vasu,vasu,vasu,HVAC
-2,Supervisor,amit,amit2,amit,06-06-06,fhbs,Security
-4,Staffer,vasu,vasu4,vasu,vasu,vasu,HVAC
-5,Supervisor,patti,patti5,patti,06,06,HVAC
-6,Supervisor,dabas,dabas6,dabas,06,06,Audio/Video
-8,Staffer,aman,aman8,aman,mk,kmkm,Security
-9,Staffer,varnit,varnit9,varnit,45454,45454,Security
-10,Staffer,patti,patti10,patti,4545,45454,Security
+1,Supervisor,amit,amit1,amit,06,06,Security
+2,Staffer,vasu,vasu2,vasu,06,06,Security
+3,Staffer,aman,aman3,aman,06,06,Security
+4,Supervisor,mayank,mayank4,mayank,06,06,Electricity
