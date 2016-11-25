@@ -190,6 +190,7 @@ public class Logistic_Requirement_Request extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 String userData=id_field.getText()+","+requirements+","+taskReference.getSelectedItem().toString();
+                userData+=","+Login.getCurrentUser()+","+"For_Approval";
                 sendRequest(userData);
             }
             

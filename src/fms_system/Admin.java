@@ -124,6 +124,18 @@ public class Admin extends JFrame{
             }
         });
         add(leave_req);
+        
+        JButton logisButton=new JButton("Logistic Approval Requests");
+        logisButton.setLocation(50,350);
+        logisButton.setSize(250,50);
+        logisButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                new Logistic_Approval_Request().setVisible(true);
+            }
+        });
+        add(logisButton);
 
     }
 }

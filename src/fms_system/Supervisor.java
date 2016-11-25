@@ -80,9 +80,17 @@ public class Supervisor extends JFrame{
         });
         add(Logistics);
         
-        JButton Approve_Requests=new JButton("Approve requests");
+        JButton Approve_Requests=new JButton("Approve Logistic Requests");
         Approve_Requests.setLocation(50,230);
         Approve_Requests.setSize(200,50);
+        Approve_Requests.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                new Logistic_Approval_Request().setVisible(true);
+            }
+            
+        });
         add(Approve_Requests);
         
         JButton Send_Requests=new JButton("Send requests");
