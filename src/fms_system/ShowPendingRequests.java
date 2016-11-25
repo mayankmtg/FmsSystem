@@ -31,6 +31,7 @@ public class ShowPendingRequests extends JFrame{
     JScrollPane table_pane;
     JPanel table_panel;
     JPanel button_panel;
+    Login login_obj;
     public void loadTable(){
         
         String line;
@@ -154,6 +155,20 @@ public class ShowPendingRequests extends JFrame{
         JButton Delete=new JButton("Reject Request");
         JButton Add =new JButton("Hire");
         //table setup
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         String columns[] ={"ID", "Type","Name", "User Name", "Password", "DOB", "Address", "Departments" };
         tableModel = new DefaultTableModel(0,8); 
         tableModel.setColumnIdentifiers(columns);

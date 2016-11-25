@@ -5,6 +5,7 @@
  */
 package fms_system;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -22,6 +23,7 @@ public class Supervisor extends JFrame{
     int width=800;
     int height=500;
     Task task_obj;
+    Login login_obj;
     public Supervisor(){
         
         super("Supervisor Interface");
@@ -53,6 +55,20 @@ public class Supervisor extends JFrame{
         inquire.setSize(200,50);
         add(inquire);
         
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(700,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JButton Assign_task=new JButton("Assign Task");
         Assign_task.setLocation(50,110);
         Assign_task.setSize(200,50);

@@ -33,6 +33,7 @@ public class Leave extends JFrame{
     int width=1000;
     int height=700;
     Staff staff_obj;
+    Login login_obj;
     public Leave(){
         //frame
         super("Leave Application");
@@ -76,6 +77,20 @@ public class Leave extends JFrame{
         add(leave);
         
         //buttons
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JButton sub=new JButton("Apply");
         sub.setLocation(300,600);
         sub.setSize(200,40);

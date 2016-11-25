@@ -35,6 +35,7 @@ public class showLeaveRequests extends JFrame {
     JPanel table_panel;
     JPanel button_panel;
     Admin admin_obj;
+    Login login_obj;
     
     public void loadTable(){
         
@@ -124,6 +125,22 @@ public class showLeaveRequests extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 login_obj=new Login();
+                 setVisible(false);
+                 login_obj.setVisible(true);
+             }
+
+        });
+
         //title
         JLabel title =new JLabel("Leave Requests");
         title.setLocation(400,50);

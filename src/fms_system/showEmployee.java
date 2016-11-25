@@ -31,6 +31,7 @@ public class showEmployee extends JFrame{
     JScrollPane table_pane;
     JPanel table_panel;
     JPanel button_panel;
+    Login login_obj;
     public void loadTable(){
         
         String line;
@@ -174,6 +175,20 @@ public class showEmployee extends JFrame{
         add(table_panel);
         
         //Button Panel
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         button_panel=new JPanel(new GridLayout(4,1,3,100));
         JButton View=new JButton("Show Employees");
         View.setBackground(Color.cyan);

@@ -44,6 +44,7 @@ public class Task extends JFrame{
     int width=1000;
     int height=700;
     JPanel Left;
+    Login login_obj;
     public int setTaskID(){
         String s;
         int id=-1;
@@ -167,6 +168,20 @@ public class Task extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         //title
+            JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JLabel title =new JLabel("Task Assigner");
         title.setLocation(400,50);
         title.setSize(300,30);

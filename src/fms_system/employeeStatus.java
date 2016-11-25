@@ -41,6 +41,7 @@ public class employeeStatus extends JFrame{
     DefaultTableModel tableModel;
     JScrollPane table_pane;
     JPanel table_panel;
+    Login login_obj;
     public void loadTable(){
         
         String line;
@@ -71,6 +72,21 @@ public class employeeStatus extends JFrame{
         add(title);
         
         //table for viewing status
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
+        
         String columns[] ={"User Name","Type","Department","Status"};
         tableModel = new DefaultTableModel(0,4); 
         tableModel.setColumnIdentifiers(columns);

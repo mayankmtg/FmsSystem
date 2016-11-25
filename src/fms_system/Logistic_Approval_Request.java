@@ -36,7 +36,7 @@ public class Logistic_Approval_Request extends JFrame {
     JPanel table_panel;
     JPanel button_panel;
     Admin admin_obj;
-    
+    Login login_obj;
     public void loadTable(){
         
         String line;
@@ -134,6 +134,20 @@ public class Logistic_Approval_Request extends JFrame {
         title.setFont(new Font("Serif", Font.PLAIN, 24));
         add(title);
         
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(900,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JButton Delete=new JButton("Reject Request");
         JButton Add =new JButton("Accept Request");
         String columns[] ={"Logistic ID","Requirements","Task Reference","From","Status"};

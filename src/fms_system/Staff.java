@@ -5,6 +5,7 @@
  */
 package fms_system;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -23,6 +24,8 @@ public class Staff extends JFrame{
     int height=500;
     Leave leave_obj;
     Logistic_Requirement_Request obj;
+    TaskReport obj1;
+    Login login_obj;
     public Staff(){
         
         super("Staff Interface");
@@ -41,6 +44,20 @@ public class Staff extends JFrame{
         date.setSize(250,20);
         add(date);
         
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(700,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JLabel time=new JLabel();
         int h = now.get(Calendar.HOUR_OF_DAY);
         int m = now.get(Calendar.MINUTE);
@@ -79,6 +96,20 @@ public class Staff extends JFrame{
                 setVisible(false);
                 leave_obj=new Leave();
                 leave_obj.setVisible(true);
+            }
+            
+        });
+        
+        JButton task=new JButton("Task Report");
+        task.setLocation(50,230);
+        task.setSize(200,50);
+        add(task);
+        task.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                obj1=new TaskReport();
+                setVisible(false);
+                obj1.setVisible(true);
             }
             
         });

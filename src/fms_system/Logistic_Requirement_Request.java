@@ -41,6 +41,7 @@ public class Logistic_Requirement_Request extends JFrame {
     int height=700;
     JPanel logisPanel;
     String requirements="";
+    Login login_obj;
     public int setLogisID(){
         String s;
         int id=-1;
@@ -116,6 +117,20 @@ public class Logistic_Requirement_Request extends JFrame {
         setLayout(null);
 
         //title
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(400,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JLabel title=new JLabel("Logistic Requirements",SwingConstants.CENTER);
         title.setLocation(100, 40);
         title.setSize(200, 40);

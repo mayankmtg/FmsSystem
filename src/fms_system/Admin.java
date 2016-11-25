@@ -5,6 +5,7 @@
  */
 package fms_system;
 
+import java.awt.Color;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ public class Admin extends JFrame{
     showEmployee employee_obj;
     employeeStatus status_obj;
     showLeaveRequests leave_obj;
+    Login login_obj;
     public Admin(){
         
         super("Admin Interface");
@@ -56,6 +58,20 @@ public class Admin extends JFrame{
         
         
         ///employee button
+        JButton log_out=new JButton("Log Out");
+    log_out.setLocation(700,0);
+    log_out.setSize(100,40);
+    log_out.setBackground(Color.orange);
+    log_out.setForeground(Color.white);
+    add(log_out);
+    log_out.addActionListener(new ActionListener(){
+         public void actionPerformed(ActionEvent e) {
+             login_obj=new Login();
+             setVisible(false);
+             login_obj.setVisible(true);
+         }
+        
+    });
         JButton view_employee=new JButton("View Employees");
         view_employee.setLocation(50,50);
         view_employee.setSize(250,50);
