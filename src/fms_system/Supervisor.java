@@ -22,8 +22,7 @@ import javax.swing.JLabel;
 public class Supervisor extends JFrame{
     int width=800;
     int height=500;
-    Task task_obj;
-    Login login_obj;
+    AssignTask task_obj;
     public Supervisor(){
         
         super("Supervisor Interface");
@@ -50,32 +49,26 @@ public class Supervisor extends JFrame{
         time.setSize(250,20);
         add(time);
         
-        JButton inquire=new JButton("Add/Delete/view Staff");
+        JButton inquire=new JButton("View Staff");
         inquire.setLocation(50,50);
         inquire.setSize(200,50);
+        inquire.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new showEmployee().setVisible(true);
+                setVisible(false);
+            }
+            
+        });
         add(inquire);
         
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(700,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         JButton Assign_task=new JButton("Assign Task");
         Assign_task.setLocation(50,110);
         Assign_task.setSize(200,50);
         Assign_task.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                task_obj=new Task();
+                task_obj=new AssignTask();
                 setVisible(false);
                 task_obj.setVisible(true);
             }
@@ -109,9 +102,17 @@ public class Supervisor extends JFrame{
         });
         add(Approve_Requests);
         
-        JButton Send_Requests=new JButton("Send requests");
+        JButton Send_Requests=new JButton("Send Logistics Requests");
         Send_Requests.setLocation(50,290);
         Send_Requests.setSize(200,50);
+        Send_Requests.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new Logistic_Requirement_Request().setVisible(true);
+                setVisible(false);
+            }
+            
+        });
         add(Send_Requests);
         
         JButton Send_Leave=new JButton("Send Leave");
@@ -130,9 +131,52 @@ public class Supervisor extends JFrame{
         JButton Task_reports=new JButton("View Task Reports");
         Task_reports.setLocation(50,410);
         Task_reports.setSize(200,50);
+        Task_reports.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new viewTaskReports().setVisible(true);
+                setVisible(false);
+            }
+            
+        });
         add(Task_reports);
         
+        JButton notify=new JButton("Show Notifications");
+        notify.setLocation(400, 200);
+        notify.setSize(200,50);
+        notify.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new Notifications().setVisible(true);
+                setVisible(false);
+            }
+        });
+        add(notify);
         
+        JButton show_task=new JButton("Show Tasks");
+        show_task.setLocation(400, 260);
+        show_task.setSize(200,50);
+        show_task.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new viewTasks().setVisible(true);
+                setVisible(false);
+            }
+        });
+        add(show_task);     
         
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+        });
     }
 }

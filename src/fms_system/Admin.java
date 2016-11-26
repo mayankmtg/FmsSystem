@@ -24,11 +24,10 @@ public class Admin extends JFrame{
     int width=800;
     int height=500;
     ShowPendingRequests update_obj=new ShowPendingRequests();
-    Task task_obj;
+    AssignTask task_obj;
     showEmployee employee_obj;
     employeeStatus status_obj;
     showLeaveRequests leave_obj;
-    Login login_obj;
     public Admin(){
         
         super("Admin Interface");
@@ -58,28 +57,13 @@ public class Admin extends JFrame{
         
         
         ///employee button
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(700,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         JButton view_employee=new JButton("View Employees");
         view_employee.setLocation(50,50);
         view_employee.setSize(250,50);
         view_employee.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                employee_obj=new showEmployee();
-                employee_obj.setVisible(true);
+                new showEmployee().setVisible(true);
                 setVisible(false);
             }
             
@@ -109,25 +93,14 @@ public class Admin extends JFrame{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 setVisible(false);
-                task_obj=new Task();
+                task_obj=new AssignTask();
                 task_obj.setVisible(true);
             }
         });
         add(Task_Assign);
         
         //view employee status
-        JButton Employee_Status=new JButton("Employee Status");
-        Employee_Status.setLocation(50,230);
-        Employee_Status.setSize(250,50);
-        Employee_Status.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                setVisible(false);
-                status_obj=new employeeStatus();
-                status_obj.setVisible(true);
-            }
-        });
-        add(Employee_Status);
+        
         JButton leave_req=new JButton("Show Leave Requests");
         leave_req.setLocation(50,290);
         leave_req.setSize(250,50);
@@ -152,6 +125,33 @@ public class Admin extends JFrame{
             }
         });
         add(logisButton);
+        
+        JButton notify=new JButton("Show Notifications");
+        notify.setLocation(50,230);
+        notify.setSize(250,50);
+        notify.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                new Notifications().setVisible(true);
+                setVisible(false);
+            }
+        });
+        add(notify);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
 
     }
 }
