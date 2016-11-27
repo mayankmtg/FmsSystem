@@ -41,7 +41,6 @@ public class Logistic_Requirement_Request extends JFrame {
     int height=700;
     JPanel logisPanel;
     String requirements="";
-    Login login_obj;
     public int setLogisID(){
         String s;
         int id=-1;
@@ -79,11 +78,9 @@ public class Logistic_Requirement_Request extends JFrame {
         BufferedReader reader;
         ArrayList<String> correspondingTask=new ArrayList<String>();
         try{       
-            reader = new BufferedReader(new FileReader("database/Tasks.csv"));
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/TasksAssigned.csv"));
             while((line = reader.readLine()) != null){
-                if(line.split(",")[8].equals(Login.getCurrentUser())){
-                    correspondingTask.add(line.split(",")[0]);
-                }
+                correspondingTask.add(line.split(",")[0]);
             }
             reader.close();
         }   catch(IOException e){}
@@ -98,15 +95,78 @@ public class Logistic_Requirement_Request extends JFrame {
         this.requirements=s;
     }
     
-    public void sendRequest(String userData){
+    public void sendLogisticForStaff(String userData){
         try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/LogisticRequirement.csv",true));
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+getSupName()+"/Logistics.csv",true));
             writer.println(userData);
             writer.close();
-        
         } catch (Exception e) {}
-        JOptionPane.showMessageDialog (null, "Logistic Requirement Request Sent", "Thank You", JOptionPane.INFORMATION_MESSAGE);
+        String line;
+        BufferedReader reader;
+        String write="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/"+getSupName()+"/Notification.csv"));
+            line = reader.readLine();
+            String[] var=line.split(",");
+            var[1]=""+(Integer.parseInt(var[1])+1);
+            write=var[0]+","+var[1]+","+var[2];
+            reader.close();
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/persons/"+getSupName()+"/Notification.csv"));
+            writer2.println(write);
+            writer2.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog (null,"Your Logistic Request Has been Sent","Thank You", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void sendLogisticForSup(String userData){
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/admin1/Logistics.csv",true));
+            writer.println(userData);
+            writer.close();
+        } catch (Exception e) {}
         
+        String line;
+        BufferedReader reader;
+        String write="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/admin1/Notification.csv"));
+            line = reader.readLine();
+            String[] var=line.split(",");
+            var[1]=""+(Integer.parseInt(var[1])+1);
+            write=var[0]+","+var[1]+","+var[2];
+            reader.close();
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/persons/admin1/Notification.csv"));
+            writer2.println(write);
+            writer2.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog (null,"Your Logistics Request Has been Sent","Thank You", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public String getSupName(){
+        String line;
+        BufferedReader reader;
+        String retString="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/Supervisors.csv"));
+            while((line = reader.readLine()) != null){
+               if(line.split(",")[7].equals(Login.getCurrentDept())){
+                   retString=line.split(",")[3];
+                   break;
+               }
+            }
+            reader.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        return retString;
     }
     public Logistic_Requirement_Request(){
 
@@ -117,20 +177,6 @@ public class Logistic_Requirement_Request extends JFrame {
         setLayout(null);
 
         //title
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(400,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         JLabel title=new JLabel("Logistic Requirements",SwingConstants.CENTER);
         title.setLocation(100, 40);
         title.setSize(200, 40);
@@ -197,20 +243,25 @@ public class Logistic_Requirement_Request extends JFrame {
         add(logisPanel);
         
         ///buttons
-        JButton view=new JButton("Send Logistic Requirement Request");
-        view.setLocation(50,550);
-        view.setSize(400,50);
-        view.setBackground(Color.green);
-        view.addActionListener(new ActionListener(){
+        JButton send=new JButton("Send Logistic Requirement Request");
+        send.setLocation(50,550);
+        send.setSize(400,50);
+        send.setBackground(Color.green);
+        send.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
                 String userData=id_field.getText()+","+requirements+","+taskReference.getSelectedItem().toString();
                 userData+=","+Login.getCurrentUser()+","+"For_Approval";
-                sendRequest(userData);
+                //sendRequest(userData);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    sendLogisticForSup(userData);
+                }
+                else{
+                    sendLogisticForStaff(userData);
+                }
             }
-            
         });
-        add(view);
+        add(send);
         
         JButton back=new JButton("Back");
         back.setLocation(50,610);
@@ -220,10 +271,32 @@ public class Logistic_Requirement_Request extends JFrame {
         back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
+                setVisible(false);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    new Admin().setVisible(true);
+                }
             }
         });
         add(back);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
     }
 
 }

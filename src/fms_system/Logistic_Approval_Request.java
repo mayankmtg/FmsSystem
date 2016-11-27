@@ -36,13 +36,13 @@ public class Logistic_Approval_Request extends JFrame {
     JPanel table_panel;
     JPanel button_panel;
     Admin admin_obj;
-    Login login_obj;
+    
     public void loadTable(){
         
         String line;
         BufferedReader reader;
         try{
-            reader = new BufferedReader(new FileReader("database/LogisticRequirement.csv"));
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/Logistics.csv"));
             while((line = reader.readLine()) != null){
                 tableModel.addRow(line.split(",")); 
             }
@@ -55,12 +55,11 @@ public class Logistic_Approval_Request extends JFrame {
         int x=leaveTable.getRowCount();
         int y=leaveTable.getColumnCount();
         String line;
-        BufferedReader reader = null;
-        PrintWriter writer = null;
+        BufferedReader reader;
+        PrintWriter writer;
         String write="";
         try{
-            reader = new BufferedReader(new FileReader("database/LogisticRequirement.csv"));
-        
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/Logistics.csv"));
             while((line = reader.readLine()) != null){
                 if(!line.split(",")[0].equals(tableModel.getValueAt(i, 0))){
                     write+=line;
@@ -73,14 +72,12 @@ public class Logistic_Approval_Request extends JFrame {
                 write+="\r\n";
             }
             reader.close();
-            writer = new PrintWriter(new FileWriter("database/LogisticRequirement.csv"));
+            writer = new PrintWriter(new FileWriter("database/persons/"+Login.getCurrentUser()+"/Logistics.csv"));
             writer.print(write);
+            writer.close();
         }   
         catch(IOException e){
         System.out.println("Error");
-        }
-        finally{
-            writer.close();
         }
         tableModel.setValueAt("Rejected", i, 4);
     }
@@ -88,40 +85,52 @@ public class Logistic_Approval_Request extends JFrame {
         int i=leaveTable.getSelectedRow();
         int x=leaveTable.getRowCount();
         int y=leaveTable.getColumnCount();
-        BufferedReader reader;
         String line;
-        PrintWriter writer = null;
+        BufferedReader reader;
+        PrintWriter writer;
         String write="";
         try{
-            reader = new BufferedReader(new FileReader("database/LogisticRequirement.csv"));
-        
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/Logistics.csv"));
             while((line = reader.readLine()) != null){
                 if(!line.split(",")[0].equals(tableModel.getValueAt(i, 0))){
                     write+=line;
                 }
                 else{
                     String[] var=line.split(",");
-                    var[4]="Approved";
+                    var[4]="Accepted";
                     write+=var[0]+","+var[1]+","+var[2]+","+var[3]+","+var[4];
                 }
                 write+="\r\n";
             }
             reader.close();
-            writer = new PrintWriter(new FileWriter("database/LogisticRequirement.csv"));
+            writer = new PrintWriter(new FileWriter("database/persons/"+Login.getCurrentUser()+"/Logistics.csv"));
             writer.print(write);
+            writer.close();
         }   
         catch(IOException e){
         System.out.println("Error");
         }
-        finally{
-            writer.close();
-        }
         tableModel.setValueAt("Approved", i, 4);
      }
     
+    public void replyLogistic(){
+        int i=leaveTable.getSelectedRow();
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+tableModel.getValueAt(i, 3).toString()+"/Logistics.csv",true));
+            String temp="";
+            for(int j=0;j<tableModel.getColumnCount()-1;j++){
+                temp+=tableModel.getValueAt(i, j) + ",";
+            }
+            temp+=tableModel.getValueAt(i, tableModel.getColumnCount()-1);
+            writer.println(temp);
+            writer.close();
+        } catch (IOException ex) {}
+    
+    }
+    
     public Logistic_Approval_Request(){
         //frame
-        super("Update Employee Database");
+        super("Logistic Approval Requests");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -134,22 +143,8 @@ public class Logistic_Approval_Request extends JFrame {
         title.setFont(new Font("Serif", Font.PLAIN, 24));
         add(title);
         
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(900,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
-        JButton Delete=new JButton("Reject Request");
-        JButton Add =new JButton("Accept Request");
+        JButton Delete=new JButton("Decline Logistic");
+        JButton Add =new JButton("Accept Logistic");
         String columns[] ={"Logistic ID","Requirements","Task Reference","From","Status"};
         tableModel = new DefaultTableModel(0,5); 
         tableModel.setColumnIdentifiers(columns);
@@ -177,7 +172,7 @@ public class Logistic_Approval_Request extends JFrame {
         
         //Button Panel
         button_panel=new JPanel(new GridLayout(4,1,3,100));
-        JButton View=new JButton("Show Requests");
+        JButton View=new JButton("Show Approval Requests");
         View.setBackground(Color.cyan);
         View.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae) {
@@ -197,7 +192,8 @@ public class Logistic_Approval_Request extends JFrame {
             @Override
             public void actionPerformed(ActionEvent ae){
                 deleteRequest();
-                JOptionPane.showMessageDialog (null, "Request Rejected!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+                replyLogistic();
+                JOptionPane.showMessageDialog (null, "Logistic Declined!!", "Done", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         button_panel.add(Delete); 
@@ -209,6 +205,7 @@ public class Logistic_Approval_Request extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     acccept();
+                    replyLogistic();
                     JOptionPane.showMessageDialog (null, "Request Accepted!!", "Done", JOptionPane.INFORMATION_MESSAGE);
                 } catch (IOException ex) {}
             }
@@ -222,14 +219,35 @@ public class Logistic_Approval_Request extends JFrame {
         Back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                admin_obj.setVisible(true);
                 setVisible(false);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    new Admin().setVisible(true);
+                }
             }
         });
         button_panel.add(Back);
         button_panel.setLocation(width-200,100);
         button_panel.setSize(200,600);
         add(button_panel);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
     }
 }
 
