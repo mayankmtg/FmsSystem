@@ -40,11 +40,10 @@ import javax.swing.SwingConstants;
  * @author mayank
  * @author amit
  */
-public class Task extends JFrame{
+public class AssignTask extends JFrame{
     int width=1000;
     int height=700;
     JPanel Left;
-    Login login_obj;
     public int setTaskID(){
         String s;
         int id=-1;
@@ -110,24 +109,10 @@ public class Task extends JFrame{
     }
     public void update_status(String staffname, String deadline){
         String line;
-        BufferedReader reader;
         PrintWriter writer;
-        String write="";
+        String write="Busy till " + deadline;
         try{
-            reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
-            while((line = reader.readLine()) != null){
-                if(line.split(",")[0].equals(staffname)){
-                    String[] var=line.split(",");
-                    write+=var[0]+","+var[1]+","+var[2]+",";
-                    write+="Busy till " + deadline;
-                }
-                else{
-                    write+=line;
-                }
-                write+="\r\n";
-            }
-            reader.close();
-            writer = new PrintWriter(new FileWriter("database/employeeStatus.csv"));
+            writer = new PrintWriter(new FileWriter("database/persons/"+staffname+"/Status.csv"));
             writer.print(write);
             writer.close();
         }   catch(IOException e){}
@@ -136,31 +121,45 @@ public class Task extends JFrame{
         String line;
         BufferedReader reader;
         try{       
-            reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
-            while((line = reader.readLine()) != null){
-                if(line.split(",")[0].equals(staffname)){
-                    if(line.split(",")[3].split(" ")[0].equals("Busy")){
-                        return false;
-                    }
-                    else if(line.split(",")[3].split(" ")[0].equals("Available")){
-                        return true;
-                    }
-                }
+            reader = new BufferedReader(new FileReader("database/persons/"+staffname+"/Status.csv"));
+            line = reader.readLine();
+            if(line.split(" ")[0].equals("Busy")){
+                return false;
+            }
+            else if(line.split(" ")[0].equals("Available")){
+                return true;
             }
             reader.close();
         }   catch(IOException e){}
         return false;
     }
-    public void assignTask(String userData){
+    public void assignTask(String userData,String employeeName){
         try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/Tasks.csv",true));
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+employeeName+"/TasksAssigned.csv",true));
             writer.println(userData);
-
             writer.close();
         
         } catch (Exception e) {}
+        String line;
+        BufferedReader reader;
+        String write="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/"+employeeName+"/Notification.csv"));
+            line = reader.readLine();
+            String[] var=line.split(",");
+            var[0]=""+(Integer.parseInt(var[0])+1);
+            write=var[0]+","+var[1]+","+var[2];
+            reader.close();
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/persons/"+employeeName+"/Notification.csv"));
+            writer2.println(write);
+            writer2.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
     }
-    public Task(){
+    public AssignTask(){
         //frame settings
         super("Task Assigner");
         setSize(width,height);
@@ -168,20 +167,6 @@ public class Task extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         //title
-            JButton log_out=new JButton("Log Out");
-    log_out.setLocation(900,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         JLabel title =new JLabel("Task Assigner");
         title.setLocation(400,50);
         title.setSize(300,30);
@@ -213,7 +198,7 @@ public class Task extends JFrame{
         for(int i=0;i<8;i++){
             Fields[i]=new JTextField();
             if(i==0){
-                Fields[0].setText(""+Task.this.setTaskID());
+                Fields[0].setText(""+AssignTask.this.setTaskID());
                 Fields[0].setEnabled(false);
             }
             Fields[i].setSize(200,20);
@@ -247,6 +232,20 @@ public class Task extends JFrame{
         Left.setLocation(50,200);
         add(Left);
         
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
         
         //Staff lists when Supervisor logs in
             
@@ -308,19 +307,13 @@ public class Task extends JFrame{
                 public void actionPerformed(ActionEvent ae) {
                     setTaskFileID(Integer.parseInt(Fields[0].getText()));
                     int check=0;
-                    if(Fields[3].getText().equals("")){
-                        Fields[3].setText(dept_combo.getSelectedItem().toString());
-                    }
-                    if(Fields[4].getText().equals("")){
-                        Fields[4].setText(sup_combo.getSelectedItem().toString());
-                    }
                     String userData="";
                     for(int i=0;i<8;i++){
                         userData+=Fields[i].getText() +",";
                     }
                     for(int i=0;i<selectedModel.getSize();i++){
                         update_status(selectedModel.getElementAt(i).toString(),Fields[7].getText());
-                        assignTask(userData+selectedModel.getElementAt(i).toString());
+                        assignTask(userData,selectedModel.getElementAt(i).toString());
                     }
                     
                     JOptionPane.showMessageDialog(null,"Task Successfully Assigned", "Done", JOptionPane.INFORMATION_MESSAGE);                    
@@ -333,7 +326,10 @@ public class Task extends JFrame{
             back.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    //code after the submit of the Task
+                    if(Login.getCurrentType().equals("Supervisor")){
+                        new Supervisor().setVisible(true);
+                        setVisible(false);
+                    }
                 }
             });
 
@@ -351,10 +347,15 @@ public class Task extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     setTaskFileID(Integer.parseInt(Fields[0].getText()));
-                    
-                    ////////////////////
-                    //send supervisor notificatio//
-                    /////////////////
+                    Fields[3].setText(dept_combo.getSelectedItem().toString());
+                    Fields[4].setText(sup_combo.getSelectedItem().toString());
+                    int check=0;
+                    String userData="";
+                    for(int i=0;i<8;i++){
+                        userData+=Fields[i].getText() +",";
+                    }
+                    assignTask(userData,sup_combo.getSelectedItem().toString());
+                    JOptionPane.showMessageDialog(null,"Task Successfully Assigned", "Done", JOptionPane.INFORMATION_MESSAGE);                    
                 }
             });
 
@@ -364,7 +365,13 @@ public class Task extends JFrame{
             back.addActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent ae) {
-                    //code after the submit of the Task
+                    setVisible(false);
+                    if(Login.getCurrentType().equals("Supervisor")){
+                        new Supervisor().setVisible(true);
+                    }
+                    else if(Login.getCurrentType().equals("Admin")){
+                        new Admin().setVisible(true);
+                    }
                 }
             });
 
@@ -376,32 +383,5 @@ public class Task extends JFrame{
             add(sub_panel);
             
         }
-        
-        //submit and back buttons
-            JButton sub=new JButton("Assign Task");
-            sub.setBackground(Color.yellow);
-            sub.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    setTaskFileID(Integer.parseInt(Fields[0].getText()));
-                }
-            });
-
-            JButton back=new JButton("Back");
-            back.setBackground(Color.red);
-            back.setForeground(Color.white);
-            back.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    //code after the submit of the Task
-                }
-            });
-
-            JPanel sub_panel=new JPanel(new GridLayout(1,2,30,30));
-            sub_panel.add(sub);
-            sub_panel.add(back);
-            sub_panel.setSize(350,30);
-            sub_panel.setLocation(600,600);
-            add(sub_panel);
     }
 }
