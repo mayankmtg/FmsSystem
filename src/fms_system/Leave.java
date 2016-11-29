@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat.Field;
 import javax.swing.JButton;
@@ -33,7 +34,80 @@ public class Leave extends JFrame{
     int width=1000;
     int height=700;
     Staff staff_obj;
-    Login login_obj;
+    
+    public void sendLeaveForStaff(String userData){
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+getSupName()+"/LeaveRequests.csv",true));
+            writer.println(userData);
+            writer.close();
+        } catch (Exception e) {}
+        String line;
+        BufferedReader reader;
+        String write="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/"+getSupName()+"/Notification.csv"));
+            line = reader.readLine();
+            String[] var=line.split(",");
+            var[2]=""+(Integer.parseInt(var[2])+1);
+            write=var[0]+","+var[1]+","+var[2];
+            reader.close();
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/persons/"+getSupName()+"/Notification.csv"));
+            writer2.println(write);
+            writer2.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog (null,"Your Leave Request Has been Sent","Thank You", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void sendLeaveForSup(String userData){
+        try{
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/admin1/LeaveRequests.csv",true));
+            writer.println(userData);
+            writer.close();
+        } catch (Exception e) {}
+        
+        String line;
+        BufferedReader reader;
+        String write="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/admin1/Notification.csv"));
+            line = reader.readLine();
+            String[] var=line.split(",");
+            var[2]=""+(Integer.parseInt(var[2])+1);
+            write=var[0]+","+var[1]+","+var[2];
+            reader.close();
+            PrintWriter writer2 = new PrintWriter(new FileWriter("database/persons/admin1/Notification.csv"));
+            writer2.println(write);
+            writer2.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        JOptionPane.showMessageDialog (null,"Your Leave Request Has been Sent","Thank You", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public String getSupName(){
+        String line;
+        BufferedReader reader;
+        String retString="";
+        try{       
+            reader = new BufferedReader(new FileReader("database/Supervisors.csv"));
+            while((line = reader.readLine()) != null){
+               if(line.split(",")[7].equals(Login.getCurrentDept())){
+                   retString=line.split(",")[3];
+                   break;
+               }
+            }
+            reader.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+        return retString;
+    }
     public Leave(){
         //frame
         super("Leave Application");
@@ -55,7 +129,6 @@ public class Leave extends JFrame{
         Texts[4]=new JLabel("End Date:");
         
         String[] box={"","Admin","Supervisor"};
-        JComboBox whom=new JComboBox(box);
         JTextField[] Fields=new JTextField[5];
         JPanel leave=new JPanel(new GridLayout(5,2,30,30));
         for(int i=0;i<5;i++)
@@ -66,59 +139,38 @@ public class Leave extends JFrame{
                 Fields[0].setEnabled(false);
             }
             leave.add(Texts[i]);
-            if(i!=1)
-                leave.add(Fields[i]);
-            else{
-                leave.add(whom);
+            if(i==1 && Login.getCurrentType().equals("Satffer")){
+                Fields[i].setEnabled(false);
+                Fields[i].setText("Supervisor");
             }
+            else if(i==1 && Login.getCurrentType().equals("Supervisor")){
+                Fields[i].setEnabled(false);
+                Fields[i].setText("Admin");
+            }
+            leave.add(Fields[i]);
         }
         leave.setLocation(300,150);
         leave.setSize(400,400);
         add(leave);
         
         //buttons
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(900,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
-        JButton sub=new JButton("Apply");
+        JButton sub=new JButton("Send Leave Request");
         sub.setLocation(300,600);
         sub.setSize(200,40);
         sub.setBackground(Color.green);
         sub.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae) {
-                Fields[1].setText(whom.getSelectedItem().toString());
-                try{
-                    PrintWriter writer = new PrintWriter(new FileWriter("database/leave.csv",true));
-                    String userData="";
-                    for(int i=0;i<4;i++){
-                        if(i==1){
-                            if(Fields[1].getText().equals("Supervisor")){
-                                userData+=Login.getCurrentDept()+",";
-                            }
-                            else{
-                                userData+="Admin,";
-                            }
-                        }
-                        else{
-                            userData+=Fields[i].getText() +",";
-                        }
-                    }
-                    userData+=Fields[4].getText();
-                    writer.println(userData);
-                    writer.close();
-                } catch (Exception e) {}
-                JOptionPane.showMessageDialog (null,"Your Leave Request Has been Sent","Thank You", JOptionPane.INFORMATION_MESSAGE);
+                String userData="";
+                for(int i=0;i<4;i++){
+                    userData+=Fields[i].getText() +",";
+                }
+                userData+=Fields[4].getText();
+                if(Login.getCurrentType().equals("Staffer")){
+                    sendLeaveForStaff(userData);
+                }
+                else{
+                    sendLeaveForSup(userData);
+                }
             }
         });
         add(sub);
@@ -136,7 +188,21 @@ public class Leave extends JFrame{
                 staff_obj=new Staff();
                 staff_obj.setVisible(true);
             }
-            
+        });
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
         });
     }
 }

@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +32,6 @@ public class ShowPendingRequests extends JFrame{
     JScrollPane table_pane;
     JPanel table_panel;
     JPanel button_panel;
-    Login login_obj;
     public void loadTable(){
         
         String line;
@@ -96,9 +96,19 @@ public class ShowPendingRequests extends JFrame{
         
         try{
             PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
-            
             PrintWriter writer2 = new PrintWriter(new FileWriter("database/Supervisors.csv",true));
             PrintWriter writer3 = new PrintWriter(new FileWriter("database/Staffer.csv",true));
+            File userDir = new File("database/persons/"+contactTable.getModel().getValueAt(i, 3));
+            try{
+                userDir.mkdir();
+                new File(userDir,"TasksAssigned.csv").createNewFile();
+                new File(userDir,"Logistics.csv").createNewFile();
+                new File(userDir,"LeaveRequests.csv").createNewFile();
+                new File(userDir,"Status.csv").createNewFile();
+                new File(userDir,"Log.csv").createNewFile();
+                new File(userDir,"Notification.csv").createNewFile();
+            } catch(SecurityException se){}
+            PrintWriter writer4 = new PrintWriter(new FileWriter(userDir.getAbsolutePath()+"/userProfile.csv",true));
             String userData="";
             for(int j=0;j<7;j++){
                 userData+=contactTable.getModel().getValueAt(i, j) +",";
@@ -114,8 +124,14 @@ public class ShowPendingRequests extends JFrame{
             }
             writer.println(userData);
             writer.close();
-            
-            
+            writer4.println(userData);
+            writer4.close();
+            PrintWriter writer5= new PrintWriter(new FileWriter(userDir.getAbsolutePath()+"/Notification.csv",true));
+            writer5.println("0,0,0");
+            writer5.close();
+            PrintWriter writer6= new PrintWriter(new FileWriter(userDir.getAbsolutePath()+"/Status.csv",true));
+            writer6.println("Available");
+            writer6.close();
             if(i>=0){
                 writeStatus(contactTable.getModel().getValueAt(i,3).toString(),
                         contactTable.getModel().getValueAt(i,1).toString(), 
@@ -155,20 +171,6 @@ public class ShowPendingRequests extends JFrame{
         JButton Delete=new JButton("Reject Request");
         JButton Add =new JButton("Hire");
         //table setup
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(900,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         String columns[] ={"ID", "Type","Name", "User Name", "Password", "DOB", "Address", "Departments" };
         tableModel = new DefaultTableModel(0,8); 
         tableModel.setColumnIdentifiers(columns);
@@ -246,13 +248,34 @@ public class ShowPendingRequests extends JFrame{
         Back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                //admin_obj.setVisible(true);
-                //setVisible(false);
+                setVisible(false);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    new Admin().setVisible(true);
+                }
             }
         });
         button_panel.add(Back);
         button_panel.setLocation(width-200,100);
         button_panel.setSize(200,600);
         add(button_panel);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
     }
 }

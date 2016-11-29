@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,19 +32,19 @@ public class showEmployee extends JFrame{
     JScrollPane table_pane;
     JPanel table_panel;
     JPanel button_panel;
-    Login login_obj;
     public void loadTable(){
-        
         String line;
         BufferedReader reader;
         BufferedReader reader2;
-            try{       
-                reader = new BufferedReader(new FileReader("database/Supervisors.csv"));
-                reader2= new BufferedReader(new FileReader("database/Staffer.csv"));
-                while((line = reader.readLine()) != null){
-                   tableModel.addRow(line.split(",")); 
+            try{
+                if(Login.getCurrentType().equals("Admin")){
+                    reader = new BufferedReader(new FileReader("database/Supervisors.csv"));
+                    while((line = reader.readLine()) != null){
+                       tableModel.addRow(line.split(",")); 
+                    }
+                    reader.close();
                 }
-                reader.close();
+                reader2= new BufferedReader(new FileReader("database/Staffer.csv"));
                 while((line = reader2.readLine()) != null){
                    tableModel.addRow(line.split(",")); 
                 }
@@ -55,89 +56,36 @@ public class showEmployee extends JFrame{
             }
     }
     
-    public void deleteRequest(){
-        
-        int i=contactTable.getSelectedRow();
-        int x=contactTable.getRowCount();
-        int y=contactTable.getColumnCount();
-        if(i>=0){
-            tableModel.removeRow(i);
-            x--;
-            JOptionPane.showMessageDialog (null, "Request Rejected!!", "Done", JOptionPane.INFORMATION_MESSAGE);
-        }
-        
+    public void deleteEmployee(String employeeName,String fileName){
+         
+        String line;
+        BufferedReader reader,reader1,reader2;
+        PrintWriter writer;
+        String write="";
         try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/registerRequests.csv",false));
-            String userData="";
-            int j,k;
-            for(j=0;j<x;j++){
-                System.out.println();
-                for (k=0;k<y-1;k++){
-                    userData+=contactTable.getModel().getValueAt(j,k).toString();
-                    userData+=",";
-                }
-                userData+=contactTable.getModel().getValueAt(j,y-1);
-                if(j!=x-1)
-                    userData+="\r\n";
+            reader = new BufferedReader(new FileReader("database/"+fileName));
+            while((line = reader.readLine()) != null){
+               if(!line.split(",")[3].equals(employeeName)){
+                   write+=line + "\r\n";
+               }
+                    
             }
-            writer.println(userData);
+            reader.close();
+            writer = new PrintWriter(new FileWriter("database/"+fileName));
+            writer.print(write);
             writer.close();
-        } 
-        catch (Exception e) {
         }
+        catch(IOException e){}
     }
     
-    public void hire(){
-        int i=contactTable.getSelectedRow();
-        int x=contactTable.getRowCount();
-        int y=contactTable.getColumnCount();
-        
-        try{
-            PrintWriter writer = new PrintWriter(new FileWriter("database/userinfo.csv",true));
-            
-            PrintWriter writer2 = new PrintWriter(new FileWriter("database/Supervisors.csv",true));
-            PrintWriter writer3 = new PrintWriter(new FileWriter("database/Staffer.csv",true));
-            String userData="";
-            for(int j=0;j<7;j++){
-                userData+=contactTable.getModel().getValueAt(i, j) +",";
-            }
-            userData+=contactTable.getModel().getValueAt(i, 7);
-            if(contactTable.getModel().getValueAt(i, 1).equals("Supervisor")){
-                writer2.println(userData);
-                writer2.close();
-            }
-            else{
-                writer3.println(userData);
-                writer3.close();
-            }
-            writer.println(userData);
-            writer.close();
-            
-            
-            if(i>=0){
-                tableModel.removeRow(i);
-                x--;
-                JOptionPane.showMessageDialog (null, "Person Added To Database!!", "Done", JOptionPane.INFORMATION_MESSAGE);
-            }
-            PrintWriter writer1 = new PrintWriter(new FileWriter("database/registerRequests.csv",false));
-            String userData1="";
-            int j,k;
-            for(j=0;j<x;j++){
-                System.out.println();
-                for (k=0;k<y-1;k++){
-                    userData1+=contactTable.getModel().getValueAt(j,k).toString();
-                    userData1+=",";
-                }
-                userData1+=contactTable.getModel().getValueAt(j,y-1);
-                if(j!=x-1)
-                    userData1+="\r\n";
-            }
-            
-            writer1.println(userData1);
-            writer1.close();
-        } 
-        catch (Exception e) {
+    public void deleteEmployeeDirec(String employeeName){
+        File index = new File("database/persons/"+employeeName);
+        String[]entries = index.list();
+        for(String s: entries){
+            File currentFile = new File(index.getPath(),s);
+            currentFile.delete();
         }
+        index.delete();
     }
     
     public showEmployee(){
@@ -146,8 +94,7 @@ public class showEmployee extends JFrame{
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
-        JButton Delete=new JButton("Reject Request");
-        JButton Add =new JButton("Hire");
+        JButton Delete=new JButton("Fire");
         //table setup
         String columns[] ={"ID", "Type","Name", "User Name", "Password", "DOB", "Address", "Departments" };
         tableModel = new DefaultTableModel(0,8); 
@@ -163,7 +110,6 @@ public class showEmployee extends JFrame{
             @Override
             public void valueChanged(ListSelectionEvent lse) {
                 Delete.setEnabled(true);
-                Add.setEnabled(true);
             }
         });
         table_pane=new JScrollPane(contactTable);
@@ -175,20 +121,6 @@ public class showEmployee extends JFrame{
         add(table_panel);
         
         //Button Panel
-        JButton log_out=new JButton("Log Out");
-    log_out.setLocation(900,0);
-    log_out.setSize(100,40);
-    log_out.setBackground(Color.orange);
-    log_out.setForeground(Color.white);
-    add(log_out);
-    log_out.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e) {
-             login_obj=new Login();
-             setVisible(false);
-             login_obj.setVisible(true);
-         }
-        
-    });
         button_panel=new JPanel(new GridLayout(4,1,3,100));
         JButton View=new JButton("Show Employees");
         View.setBackground(Color.cyan);
@@ -210,25 +142,23 @@ public class showEmployee extends JFrame{
         Delete.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae){
-                deleteRequest();
+                int i=contactTable.getSelectedRow();
+                deleteEmployee(tableModel.getValueAt(i, 3).toString(), "Supervisor.csv");
+                deleteEmployee(tableModel.getValueAt(i, 3).toString(), "Staffer.csv");
+                deleteEmployee(tableModel.getValueAt(i, 3).toString(), "userinfo.csv");
+                deleteEmployeeDirec(tableModel.getValueAt(i, 3).toString());
+                if(i>=0){
+                    tableModel.removeRow(i);
+                    JOptionPane.showMessageDialog (null, "Employee Fired!!", "Done", JOptionPane.INFORMATION_MESSAGE);
+                }
+                
                 Delete.setEnabled(false);
-                Add.setEnabled(false);
             }
         });
-        button_panel.add(Delete); 
-        
-        Add.setEnabled(false);
-        Add.setBackground(Color.green);
-        Add.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                hire();
-            }
-        });
-        button_panel.add(Add);
+        button_panel.add(Delete);
         
         //title
-        JLabel title =new JLabel("Request Status");
+        JLabel title =new JLabel("Show Employee Database");
         title.setLocation(400,50);
         title.setSize(300,20);
         title.setFont(new Font("Serif", Font.PLAIN, 24));
@@ -240,13 +170,34 @@ public class showEmployee extends JFrame{
         Back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                //admin_obj.setVisible(true);
-                //setVisible(false);
+                setVisible(false);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    new Admin().setVisible(true);
+                }
             }
         });
         button_panel.add(Back);
         button_panel.setLocation(width-200,100);
         button_panel.setSize(200,600);
         add(button_panel);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+
+        });
     }
 }

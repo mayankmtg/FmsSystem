@@ -37,8 +37,8 @@ public class Login extends JFrame{
     Staff staff_obj;
     Admin admin_obj;
     private static String current_user_name;// this contains the username of the person who has logged in
-    private static String current_user_dept;
-    private static String current_user_type;
+    private static String current_user_dept;// department of user logged in
+    private static String current_user_type;// Supervisor / Admin / Staffer
     public static String getCurrentUser(){
         return current_user_name;
     }
@@ -51,7 +51,7 @@ public class Login extends JFrame{
     }
     public void setLog(){
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter("database/Log.csv",true));
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+Login.getCurrentUser()+"/Log.csv",true));
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
             String log=current_user_name + "," + timeStamp;
             writer.println(log);
@@ -143,17 +143,14 @@ public class Login extends JFrame{
                 catch(Exception e){
                     e.printStackTrace();
                 }
-                
             }
             
         });
-        
         add(title);
         add(userName);
         add(password);
         add(uname);
         add(pass);
         add(sub);
-        
     }
 }

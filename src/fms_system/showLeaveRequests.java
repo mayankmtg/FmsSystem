@@ -35,14 +35,12 @@ public class showLeaveRequests extends JFrame {
     JPanel table_panel;
     JPanel button_panel;
     Admin admin_obj;
-    Login login_obj;
     
     public void loadTable(){
-        
         String line;
         BufferedReader reader;
         try{
-            reader = new BufferedReader(new FileReader("database/leave.csv"));
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/LeaveRequests.csv"));
             while((line = reader.readLine()) != null){
                if(line.split(",")[1].equals(Login.getCurrentDept()))
                     tableModel.addRow(line.split(",")); 
@@ -60,8 +58,7 @@ public class showLeaveRequests extends JFrame {
         PrintWriter writer = null;
         String write="";
         try{
-            reader = new BufferedReader(new FileReader("database/leave.csv"));
-        
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/LeaveRequests.csv"));
             while((line = reader.readLine()) != null){
                 if(!line.split(",")[0].equals(tableModel.getValueAt(i, 0))){
                     write+=line;
@@ -69,7 +66,7 @@ public class showLeaveRequests extends JFrame {
                 }
             }
             reader.close();
-            writer = new PrintWriter(new FileWriter("database/leave.csv"));
+            writer = new PrintWriter(new FileWriter("database/persons/"+Login.getCurrentUser()+"/LeaveRequests.csv"));
             writer.print(write);
         }   
         catch(IOException e){
@@ -84,26 +81,12 @@ public class showLeaveRequests extends JFrame {
             x--;
         }
     }
-    public void update_status(String staffname, String deadline){
+    public void update_status(String employeeName, String deadline){
         String line;
-        BufferedReader reader;
         PrintWriter writer;
-        String write="";
+        String write="On_Leave till " + deadline;
         try{
-            reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
-            while((line = reader.readLine()) != null){
-                if(line.split(",")[0].equals(staffname)){
-                    String[] var=line.split(",");
-                    write+=var[0]+","+var[1]+","+var[2]+",";
-                    write+="On_Leave till " + deadline;
-                }
-                else{
-                    write+=line;
-                }
-                write+="\r\n";
-            }
-            reader.close();
-            writer = new PrintWriter(new FileWriter("database/employeeStatus.csv"));
+            writer = new PrintWriter(new FileWriter("database/persons/"+employeeName+"/Status.csv"));
             writer.print(write);
             writer.close();
         }   catch(IOException e){}
@@ -125,22 +108,6 @@ public class showLeaveRequests extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         
-        
-        JButton log_out=new JButton("Log Out");
-        log_out.setLocation(900,0);
-        log_out.setSize(100,40);
-        log_out.setBackground(Color.orange);
-        log_out.setForeground(Color.white);
-        add(log_out);
-        log_out.addActionListener(new ActionListener(){
-             public void actionPerformed(ActionEvent e) {
-                 login_obj=new Login();
-                 setVisible(false);
-                 login_obj.setVisible(true);
-             }
-
-        });
-
         //title
         JLabel title =new JLabel("Leave Requests");
         title.setLocation(400,50);
@@ -217,21 +184,39 @@ public class showLeaveRequests extends JFrame {
         });
         button_panel.add(Add);
         
-        
         JButton Back=new JButton("Back");
         Back.setBackground(Color.red);
         Back.setForeground(Color.white);
         Back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                admin_obj.setVisible(true);
                 setVisible(false);
+                if(Login.getCurrentType().equals("Supervisor")){
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Admin")){
+                    new Admin().setVisible(true);
+                }
             }
         });
         button_panel.add(Back);
         button_panel.setLocation(width-200,100);
         button_panel.setSize(200,600);
         add(button_panel);
+        
+        JButton log_out=new JButton("Log Out");
+        log_out.setLocation(900,0);
+        log_out.setSize(100,40);
+        log_out.setBackground(Color.orange);
+        log_out.setForeground(Color.white);
+        add(log_out);
+        log_out.addActionListener(new ActionListener(){
+             public void actionPerformed(ActionEvent e) {
+                 new Login().setVisible(true);
+                 setVisible(false);
+                 
+             }
+        });
     }
 }
 

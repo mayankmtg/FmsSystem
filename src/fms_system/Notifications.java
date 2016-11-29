@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -34,7 +36,7 @@ import javax.swing.table.DefaultTableModel;
  * @author mayank
  * @author amit
  */
-public class employeeStatus extends JFrame{
+public class Notifications extends JFrame{
     int width=500;
     int height=700;
     JTable statusTable;
@@ -45,34 +47,42 @@ public class employeeStatus extends JFrame{
         
         String line;
         BufferedReader reader;
-            try{       
-                reader = new BufferedReader(new FileReader("database/employeeStatus.csv"));
-                while((line = reader.readLine()) != null){
-                   tableModel.addRow(line.split(",")); 
-                }
-                reader.close();
-             }
-            catch(IOException e){
-                JOptionPane.showMessageDialog(null, "Error");
-                e.printStackTrace();
+        try{       
+            reader = new BufferedReader(new FileReader("database/persons/"+Login.getCurrentUser()+"/Notification.csv"));
+            while((line = reader.readLine()) != null){
+               tableModel.addRow(line.split(",")); 
             }
+            reader.close();
+         }
+        catch(IOException e){
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
     }
-    public employeeStatus(){
+    public void resetNotification(){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter("database/persons/"+Login.getCurrentUser()+"/Notification.csv"));
+            String temp="0,0,0";
+            writer.println(temp);
+            writer.close();
+        } catch (IOException ex) {}
+    }
+    public Notifications(){
         
-        super("Leave Application");
+        super("Notifications");
         setSize(width,height);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
         
-        JLabel title=new JLabel("View Employee Status",SwingConstants.CENTER);
+        JLabel title=new JLabel("See All Notifications",SwingConstants.CENTER);
         title.setLocation(100, 40);
         title.setSize(200, 40);
         add(title);
         
         //table for viewing status
-        String columns[] ={"User Name","Type","Department","Status"};
-        tableModel = new DefaultTableModel(0,4); 
+        String columns[] ={"Tasks","Logistics","Leave"};
+        tableModel = new DefaultTableModel(0,3); 
         tableModel.setColumnIdentifiers(columns);
         statusTable=new JTable(){
             public boolean isCellEditable(int row, int column){
@@ -91,7 +101,7 @@ public class employeeStatus extends JFrame{
         add(table_panel);
         
         ///buttons
-        JButton view=new JButton("View Status");
+        JButton view=new JButton("See Notifications");
         view.setLocation(50,550);
         view.setSize(400,50);
         view.setBackground(Color.cyan);
@@ -112,14 +122,24 @@ public class employeeStatus extends JFrame{
         back.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
-                
+                if(Login.getCurrentType().equals("Supervisor")){
+                    new Supervisor().setVisible(true);
+                }
+                else if(Login.getCurrentType().equals("Staffer")){
+                    new Staff().setVisible(true);
+                }
+                else{
+                    new Admin().setVisible(true);
+                }
+               setVisible(false);
+               resetNotification();
             }
             
         });
         add(back);
         
         JButton log_out=new JButton("Log Out");
-        log_out.setLocation(900,0);
+        log_out.setLocation(width-100,0);
         log_out.setSize(100,40);
         log_out.setBackground(Color.orange);
         log_out.setForeground(Color.white);
